@@ -1,0 +1,12 @@
+@page {
+   margin-top: 0.50in;
+   margin-left: 0.50in;
+   margin-right: 0.25in;
+}
+
+table {
+   font-family: arial;
+   font-size: 12px;
+   width: 600px;
+   border-collapse: collapse;
+}

@@ -1,0 +1,73 @@
+<?php
+// GMPM Application Bootstrap
+
+// Define paths if not already defined
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(dirname(__DIR__)));
+}
+if (!defined('APP_PATH')) {
+    define('APP_PATH', BASE_PATH . '/app');
+}
+if (!defined('PUBLIC_PATH')) {
+    define('PUBLIC_PATH', BASE_PATH . '/public_html');
+}
+if (!defined('STORAGE_PATH')) {
+    define('STORAGE_PATH', dirname(APP_PATH) . '/storage');
+}
+if (!defined('CONFIG_PATH')) {
+    define('CONFIG_PATH', APP_PATH . '/config');
+}
+if (!defined('RESOURCE_PATH')) {
+    define('RESOURCE_PATH', APP_PATH . '/resources');
+}
+
+// Load composer autoloader
+require_once APP_PATH . '/vendor/autoload.php';
+
+// Load environment variables
+if (file_exists(APP_PATH . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(APP_PATH);
+    $dotenv->load();
+}
+
+// Start session with security settings if not in CLI and headers not sent
+if (php_sapi_name() !== 'cli' && !headers_sent() && session_status() === PHP_SESSION_NONE) {
+    $sessionConfig = file_exists(CONFIG_PATH . '/security.php') 
+        ? require CONFIG_PATH . '/security.php' 
+        : ['session' => ['lifetime' => 120, 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']];
+    
+    session_set_cookie_params([
+        'lifetime' => $sessionConfig['session']['lifetime'] * 60,
+        'path' => '/',
+        'secure' => $sessionConfig['session']['secure'],
+        'httponly' => $sessionConfig['session']['httponly'],
+        'samesite' => $sessionConfig['session']['samesite']
+    ]);
+    session_start();
+}
+
+// Set timezone
+$appConfig = file_exists(CONFIG_PATH . '/app.php') 
+    ? require CONFIG_PATH . '/app.php'
+    : ['timezone' => 'America/New_York', 'debug' => false];
+    
+date_default_timezone_set($appConfig['timezone']);
+
+// Error reporting
+if ($appConfig['debug'] ?? false) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+}
+
+// Load helpers
+require_once APP_PATH . '/src/Helpers/functions.php';
+
+// Initialize logger (with error handling)
+try {
+} catch (Exception $e) {
+    // Silently fail if logger can't write (permissions issue, etc)
+    error_log('Logger initialization failed: ' . $e->getMessage());
+}

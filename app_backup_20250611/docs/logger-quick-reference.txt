@@ -1,0 +1,22 @@
+GMPM Logger Quick Reference
+===========================
+
+Basic Usage:
+-----------
+Logger::debug('Debug message');
+Logger::info('Information message');
+Logger::warning('Warning message');
+Logger::error('Error message');
+
+With Context:
+------------
+Logger::info('User action', ['user_id' => 123, 'action' => 'login']);
+Logger::error('Database error', ['query' => $sql, 'error' => $e->getMessage()]);
+
+Log Locations:
+-------------
+app-YYYY-MM-DD.log      - General application logs
+error-YYYY-MM-DD.log    - Error logs only
+security-YYYY-MM-DD.log - Security events
+access-YYYY-MM-DD.log   - Access logs
+sql.log                 - SQL queries (debug mode)

@@ -1,0 +1,13 @@
+GMPM System Status Report
+========================
+Date: $(date)
+
+Components:
+- Router: $([ -f ~/app/src/Router.php ] && echo "✓" || echo "✗")
+- Controllers: $(ls ~/app/src/Controllers/*.php 2>/dev/null | wc -l) files
+- Middleware: $(ls ~/app/src/Middleware/*.php 2>/dev/null | wc -l) files
+- Views: $(find ~/app/resources/views -name "*.php" 2>/dev/null | wc -l) files
+- Config: $(ls ~/app/config/*.php 2>/dev/null | wc -l) files
+
+FastRoute: $(cd ~/app && composer show nikic/fast-route 2>/dev/null | grep -o "v[0-9.]*" || echo "Not installed")
+

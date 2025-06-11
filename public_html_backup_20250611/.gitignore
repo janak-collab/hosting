@@ -1,0 +1,22 @@
+# Environment files
+.env
+.env.*
+
+# Storage
+/storage/*
+!/storage/.gitkeep
+
+# Vendor
+/vendor/
+
+# Logs
+*.log
+error_log
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
