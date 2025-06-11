@@ -15,3 +15,15 @@ storage/
 .caldav/
 .cl.selector/
 .git-credentials
+# Ignore server/user config directories
+.cache/
+.cagefs/
+.caldav/
+.cl.selector/
+.config/
+.cpanel/
+.gnupg/
+.sitepad/
+.spamassassin/
+.trash/
+
