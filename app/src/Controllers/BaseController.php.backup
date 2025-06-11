@@ -1,9 +1,0 @@
-<?php
-namespace App\Controllers;
-
-abstract class BaseController {
-    protected function view($template, $data = []) {
-        extract($data);
-        require_once APP_PATH . '/templates/views/' . $template . '.php';
-    }
-}
