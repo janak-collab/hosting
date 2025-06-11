@@ -39,8 +39,9 @@ ssl/
 www/
 gmpm-new/
 access-logs/
-public_html  # <-- ignore symlink if present
+public_html/  # <-- ignore symlink if present
 
 # Allow real ~/public_html contents even if above line matches a symlink
+!public_html
 !public_html/**
 
