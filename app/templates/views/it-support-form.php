@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f26522">
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="/assets/css/header-styles.css">
 </head>
 <body>
@@ -142,7 +142,7 @@
         </div>
     </div>
     
-    <script src="/assets/js/it-support-form.js"></script>
+    <script src="/assets/js/app.js"></script>
     <script src="/assets/js/header.js"></script>
 </body>
 </html>

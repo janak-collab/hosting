@@ -1,7 +1,7 @@
 # GMPM Portal v2.0 - Deployment Information
 
 ## Deployment Date
-- **Completed**: 2025-06-07 23:58 UTC
+- **Completed**: $(date +"%Y-%m-%d %H:%M UTC")
 - **Version**: 2.0.0
 - **Environment**: Production
 
@@ -34,11 +34,12 @@
 │   └── assets/           # CSS/JS/Images
 └── storage/              # Application storage
 ## Maintenance Commands
-- **Check Status**: `~/bin/check-gmpm`
+- **Check Status**: `gmpm status`
 - **View Routes**: `php ~/app/route-list.php`
 - **System Info**: `php ~/app/dashboard-final.php`
-- **Backup**: `~/bin/backup-gmpm`
-- **Monitor**: `~/bin/monitor-gmpm`
+- **Backup**: `gmpm backup`
+- **Monitor**: `gmpm monitor`
+- **Sync to Git**: `gmpm sync`
 
 ## Support Contacts
 - **IT Email**: IT.request@greatermarylandpainmanagement.com

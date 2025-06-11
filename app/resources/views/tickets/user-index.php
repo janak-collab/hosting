@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>My Support Tickets - GMPM</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
-    <link rel="stylesheet" href="/assets/css/panel-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    
 </head>
 <body>
     <div class="container">

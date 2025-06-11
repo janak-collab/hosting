@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 <html>
 <head>
     <title>View Tickets - GMPM</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
     <div class="container">

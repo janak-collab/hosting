@@ -16,7 +16,7 @@ header('Expires: 0');
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Dictation Generator - GMPM</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <style>
         .procedure-card {
             background: white;

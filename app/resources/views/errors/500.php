@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>500 - Server Error | Greater Maryland Pain Management</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
     <div class="container">

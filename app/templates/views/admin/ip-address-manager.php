@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?> - Greater Maryland Pain Management</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <style>
         /* Additional styles specific to IP Manager */
         .ip-grid {
@@ -181,6 +181,6 @@
     </div>
     
     <!-- External JavaScript file for CSP compliance -->
-    <script src="/assets/js/ip-manager.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
 </html>

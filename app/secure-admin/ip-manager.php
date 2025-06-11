@@ -241,7 +241,7 @@ $currentIPs = getCurrentIPs();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP Address Manager - Greater Maryland Pain Management</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <style>
         /* Additional styles specific to IP Manager */
         .ip-grid {
@@ -467,6 +467,6 @@ pattern="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9
     </div>
     
     <!-- External JavaScript file for CSP compliance -->
-    <script src="/assets/js/ip-address-manager.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>400 - Bad Request | Greater Maryland Pain Management</title>
-    <link rel="stylesheet" href="<?php echo asset("css/form-styles.css"); ?>">
+    <link rel="stylesheet" href="<?php echo asset("css/app.css"); ?>">
     <style>
         .error-container {
             min-height: 100vh;

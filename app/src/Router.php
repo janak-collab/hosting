@@ -11,7 +11,11 @@ class Router {
         $this->dispatcher = \FastRoute\simpleDispatcher(function(RouteCollector $r) {
             // Dashboard
             $r->addRoute('GET', '/', 'DashboardController@index');
+        $r->addRoute('GET', '/status', 'PortalController@status');
             $r->addRoute('GET', '/dashboard', 'DashboardController@index');
+            
+            // Status page
+            $r->addRoute('GET', '/status', 'PortalController@status');
             
             // Phone Note Routes
             $r->addRoute('GET', '/phone-note', 'PhoneNoteController@showForm');

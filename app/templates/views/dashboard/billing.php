@@ -10,7 +10,7 @@ $userRole = $userRole ?? 'Billing Staff';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Billing Dashboard - GMPM</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="/assets/css/dashboard.css">
 </head>
 <body data-role="billing">

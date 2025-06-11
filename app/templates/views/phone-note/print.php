@@ -157,7 +157,7 @@
         <div style="border: 1px solid #000; height: 100px; margin-top: 10px;"></div>
     </div>
 
-    <script src="/assets/js/phone-note-print.js"></script>
+    <script src="/assets/js/app.js"></script>
 
 </body>
 </html>

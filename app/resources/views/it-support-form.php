@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IT Support Request - Greater Maryland Pain Management</title>
-    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
     <div class="container">
@@ -133,6 +133,6 @@
         </div>
     </div>
     
-    <script src="/assets/js/it-support-form.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
 </html>
