@@ -1,44 +1,40 @@
 # GMPM Project .gitignore
 
-# Sensitive files and credentials
+# ============================================
+# SECURITY - Sensitive files and credentials
+# ============================================
 .env
-*.env
-.env.backup.*
+.env.*
+!.env.example
+.env.backup*
 .git-credentials
 *.pem
 *.key
+*.crt
+*.p12
+.htpasswds/passwd
+config/database.php
+config/email.php
 
-# Personal/sensitive dotfiles
-.bash_history
+# ============================================
+# PERSONAL/SERVER DOTFILES
+# ============================================
+.bash*
 .mysql_history
 .lesshst
 .lastlogin
+.profile
+.viminfo
+.selected_editor
+.sudo_as_admin_successful
 
-# Server-specific configuration files
-.bashrc
-.bash_profile
-.bash_logout
-.imunify_patch_id
-.myimunify_id
-.wp-toolkit-identifier
+# ============================================
+# SERVER/HOSTING SPECIFIC
+# ============================================
+.imunify*
+.myimunify*
+.wp-toolkit*
 .spamassassin*
-
-# Application logs and caches
-*.log
-*.bak
-*.swp
-storage/logs/*
-storage/cache/*
-storage/sessions/*
-
-# Dependencies and build artifacts
-vendor/
-node_modules/
-tmp/
-temp_restore/
-
-# Server/hosting-specific directories
-.cache/
 .cagefs/
 .caldav/
 .cl.selector/
@@ -51,41 +47,139 @@ temp_restore/
 .trash/
 mail/
 ssl/
-
-# SSH keys (keep .gitconfig but ignore sensitive keys)
-.ssh/
-*.pub
-yes
-yes.pub
-
-# Symlinked paths and aliases
-www/
-gmpm-new/
-access-logs/
-
-# Keep .htpasswds (needed for HTTP Basic Auth)
-!.htpasswds/
-!.htpasswds/**
-
-# Keep .gitconfig (useful for development)
-!.gitconfig
-
-# Application-specific ignores
-public_html/error_log
-app/storage/logs/*.log
-backups/
+etc/
+access-logs
 cookies.txt
 
-# IDE and editor files
+# ============================================
+# APPLICATION
+# ============================================
+# Logs
+*.log
+error_log
+logs/
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Cache
+storage/cache/*
+!storage/cache/.gitkeep
+storage/sessions/*
+!storage/sessions/.gitkeep
+
+# Uploads
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# Backups and dumps
+backups/
+*.sql
+*.sql.gz
+*.dump
+*.backup
+*.bak
+*.zip
+*.tar
+*.tar.gz
+
+# ============================================
+# DEPENDENCIES
+# ============================================
+vendor/
+node_modules/
+bower_components/
+
+# ============================================
+# BUILD/TEMP FILES
+# ============================================
+tmp/
+temp/
+temp_restore/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ============================================
+# DEBUG/TEST FILES
+# ============================================
+*debug*.php
+*test*.php
+!app/tests/**
+test-*.php
+*.test.php
+phpinfo.php
+
+# ============================================
+# IDE/EDITOR
+# ============================================
 .vscode/
 .idea/
 *.sublime-*
+.project
+.settings/
+nbproject/
+.buildpath
 
-# OS generated files
+# ============================================
+# OS FILES
+# ============================================
+# macOS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
+.AppleDouble
+.LSOverride
+Icon?
+
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+
+# ============================================
+# DOCUMENTATION IN WRONG PLACES
+# ============================================
+public_html/*.md
+public_html/**/*.md
+!public_html/api/README.md
+
+# ============================================
+# SPECIAL RULES
+# ============================================
+# Keep these files
+!.htaccess
+!public_html/.htaccess
+!app/.htaccess
+!.htpasswds/
+!.htpasswds/.htaccess
+!.gitignore
+!.gitconfig
+
+# Ignore specific problematic files
+public_html/assets/js/*.backup*
+gmpm-new
+www
+
+# ============================================
+# COMPOSER
+# ============================================
+composer.phar
+/composer.lock
+
+# ============================================
+# NPM/YARN
+# ============================================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
