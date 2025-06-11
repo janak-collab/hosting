@@ -186,3 +186,15 @@ yarn.lock
 .ssh/
 **/.ssh/
 .cache/
+.cache/
+vendor/
+.env
+.DS_Store
+*.log
+error_log
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+composer.lock
