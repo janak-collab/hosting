@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management Test</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/panel-styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <h1>User Management UI Test</h1>
+            <div class="form-content">
+                <p>Testing user management interface components:</p>
+                <ul>
+                    <li><a href="/admin/users" target="_blank">User List</a></li>
+                    <li><a href="/admin/users/create" target="_blank">Create User</a></li>
+                    <li><a href="/admin/users/edit/1" target="_blank">Edit User (ID: 1)</a></li>
+                </ul>
+                
+                <h2>Quick API Test</h2>
+                <button onclick="testAPI()">Test User List API</button>
+                <pre id="apiResult"></pre>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    async function testAPI() {
+        try {
+            const response = await fetch('/api/users/list.php');
+            const data = await response.json();
+            document.getElementById('apiResult').textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+            document.getElementById('apiResult').textContent = 'Error: ' + error.message;
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<?php
+// GMPM Application Entry Point
+define('ROOT_PATH', dirname(__DIR__));
+define('APP_PATH', ROOT_PATH . '/app');
+define('PUBLIC_PATH', __DIR__);
+define('STORAGE_PATH', ROOT_PATH . '/storage');
+
+// Security check - ensure critical files aren't accessible
+if (file_exists(__DIR__ . '/.env')) {
+    die('Security Error: .env file should not be in public directory!');
+}
+
+// Check if vendor exists in new location
+if (!file_exists(APP_PATH . '/vendor/autoload.php')) {
+    die('Error: Vendor directory not found. Please check installation.');
+}
+
+// Autoload
+require_once APP_PATH . '/vendor/autoload.php';
+
+// Load environment variables
+if (file_exists(APP_PATH . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(APP_PATH);
+    $dotenv->load();
+}
+
+// Load bootstrap file
+require_once APP_PATH . '/src/bootstrap.php';
+
+// Start session for all requests
+if (session_status() === PHP_SESSION_NONE) { 
+    session_start(); 
+}
+
+// Basic routing
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = rtrim($requestUri, '/');
+
+// Log access for security monitoring
+error_log("Access: " . $_SERVER['REMOTE_ADDR'] . " - " . $requestUri);
+
+// Route the request
+switch (true) {
+    case $requestUri === '' || $requestUri === '/index.php':
+        // Load Dashboard Controller
+        require APP_PATH . '/src/Controllers/DashboardController.php';
+        $controller = new \App\Controllers\DashboardController();
+        $controller->index();
+        break;
+    
+    case $requestUri === '/phone-note':
+        require APP_PATH . '/public-endpoints/phone-note.php';
+        break;
+        
+    case $requestUri === '/it-support':
+        require APP_PATH . '/public-endpoints/it-support.php';
+        break;
+        
+    case $requestUri === '/view-tickets':
+        require APP_PATH . '/public-endpoints/view-tickets.php';
+        break;
+        
+    // Forms routes - NEW SECTION
+    case $requestUri === '/forms':
+        require APP_PATH . '/src/Controllers/FormsController.php';
+        $controller = new \App\Controllers\FormsController();
+        $controller->index();
+        break;
+
+    case preg_match('/^\/forms\/([a-z-]+)$/', $requestUri, $matches):
+        require APP_PATH . '/src/Controllers/FormsController.php';
+        $controller = new \App\Controllers\FormsController();
+        $controller->index($matches[1]);
+        break;
+
+    case preg_match('/^\/forms\/([a-z-]+)\/([a-z-]+)$/', $requestUri, $matches):
+        require APP_PATH . '/src/Controllers/FormsController.php';
+        $controller = new \App\Controllers\FormsController();
+        $controller->showForm($matches[1], $matches[2]);
+        break;
+
+    case $requestUri === '/api/forms/submit':
+        require APP_PATH . '/src/Controllers/FormsController.php';
+        $controller = new \App\Controllers\FormsController();
+        $controller->submitForm();
+        break;
+
+    case $requestUri === '/api/forms/search':
+        require APP_PATH . '/src/Controllers/FormsController.php';
+        $controller = new \App\Controllers\FormsController();
+        $controller->search();
+        break;
+    // END Forms routes
+    
+    case strpos($requestUri, '/admin') === 0:
+        // Add authentication check here
+        $adminController = APP_PATH . '/src/Controllers/AdminController.php';
+        if (file_exists($adminController)) {
+            require $adminController;
+        } else {
+            http_response_code(404);
+            echo "Admin area not implemented yet";
+        }
+        break;
+        
+    case $requestUri === '/api/dashboard/stats':
+        require APP_PATH . '/src/Controllers/DashboardController.php';
+        $controller = new \App\Controllers\DashboardController();
+        $controller->getStats();
+        break;
+        
+    case strpos($requestUri, '/api') === 0:
+        // API routes stay in public for now
+        $apiPath = str_replace('/api', '', $requestUri);
+        $apiFile = PUBLIC_PATH . '/api' . $apiPath . '.php';
+        if (file_exists($apiFile)) {
+            require $apiFile;
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'API endpoint not found']);
+        }
+        break;
+        
+    case strpos($requestUri, '/assets') === 0:
+        // Let server handle static files
+        return false;
+        break;
+        
+    case $requestUri === '/api/dashboard/stats':
+        require APP_PATH . '/src/Controllers/DashboardController.php';
+        $controller = new \App\Controllers\DashboardController();
+        $controller->getStats();
+        break;
+
+    default:
+        http_response_code(404);
+        if (file_exists(__DIR__ . '/errors/404.html')) {
+            include __DIR__ . '/errors/404.html';
+        } else {
+            echo "404 - Not Found";
+        }
+}

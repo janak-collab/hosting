@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>503 - Service Unavailable | Greater Maryland Pain Management</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <style>
+        .error-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .error-code {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        .error-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+        .error-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="form-card" style="max-width: 600px; text-align: center;">
+            <div class="form-header">
+                <h1>🔧 Under Maintenance</h1>
+            </div>
+            <div class="form-content">
+                <div class="error-code">503</div>
+                <div class="error-message">Service Temporarily Unavailable</div>
+                <p class="error-description">
+                    We're performing scheduled maintenance to improve our services. We'll be back online 
+shortly. Thank you for your patience.
+                </p>
+                <div class="error-actions">
+                    <button onclick="location.reload()" class="btn btn-primary">Try Again</button>
+                    <a href="mailto:it@gmpmmd.com" class="btn btn-secondary">Contact IT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

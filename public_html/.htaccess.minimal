@@ -1,0 +1,9 @@
+# Minimal routing-only version
+# ============================================================================
+# ROUTING RULES FOR PHP APPLICATION
+# ============================================================================
+<IfModule LiteSpeed>
+    # Route all non-file/non-directory requests to index.php
+    RewriteCond %{REQUEST_FILENAME} find /home/gmpmus -name *ip*manager* -type f 2>/dev/null | grep -v node_modules|vendor
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+</IfModule>

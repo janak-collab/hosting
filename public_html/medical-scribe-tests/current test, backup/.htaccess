@@ -1,0 +1,30 @@
+AuthUserFile "/home1/jvidyart/.htpasswds/public_html/janakvidyarthi.com/private_area/scribe/passwd"
+AuthType Basic
+AuthName "Private"
+require valid-user
+
+Order deny,allow
+Deny from all
+# Odenton old IP but still needed?
+Allow from 72.81.228.74
+
+# Odenton newer IP
+Allow from 68.134.31.125
+
+#Edgewater
+Allow from 173.67.39.5
+
+#Leonardtown
+Allow from 24.245.103.202
+
+#Prince Frederick
+Allow from 73.39.186.209
+
+#Catonsville
+Allow from 73.191.112.4
+
+#Home office
+Allow from 173.69.173.36
+
+#Glen Burnie
+Allow from 98.117.50.2

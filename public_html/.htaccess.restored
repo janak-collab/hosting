@@ -1,0 +1,323 @@
+# GMPM Production Configuration - Enhanced Security & Performance
+# Last Updated: May 31, 2025
+
+# ============================================================================
+# CORE SETTINGS
+# ============================================================================
+<IfModule LiteSpeed>
+    AddHandler application/x-httpd-php82 .php
+</IfModule>
+
+# Set default character set
+AddDefaultCharset UTF-8
+
+# Disable server signature
+ServerSignature Off
+
+# Set timezone
+SetEnv TZ America/New_York
+
+# Directory options
+Options -Indexes +FollowSymLinks
+DirectoryIndex index.php
+
+# ============================================================================
+# REWRITE ENGINE & ROUTING
+# ============================================================================
+<IfModule LiteSpeed>
+    RewriteEngine On
+
+    # Remove .php extension and add trailing slash handling
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+    
+    # Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+    # ============================================================================
+    # ROUTING - Route all requests through index.php
+    # ============================================================================
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+    
+    # Route everything through index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # Allow direct access to test files
+    RewriteCond %{REQUEST_URI} !^/test-.*\.php$ [NC]
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+    
+    # Block access to hidden files and directories
+    RewriteRule ^\.(.*)$ - [F,L]
+    
+    # ============================================================================
+    # ATTACK PREVENTION (before IP checks)
+    # ============================================================================
+    # Block suspicious request methods
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|DELETE|TRACK|DEBUG|PATCH) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+    
+    # Block suspicious user agents
+    RewriteCond %{HTTP_USER_AGENT} ^$ [OR]
+    RewriteCond %{HTTP_USER_AGENT} (nikto|sqlmap|w3af|nmap|havij|appscan) [NC,OR]
+    RewriteCond %{HTTP_USER_AGENT} (bot|crawl|spider|scan).*?(bad|evil|malicious) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+    
+    # Block SQL injection attempts
+    RewriteCond %{QUERY_STRING} (union.*select|select.*from|insert.*into|drop.*table|delete.*from|update.*set|cast.*\(|declare.*@|exec\(|execute\() [NC,OR]
+    RewriteCond %{QUERY_STRING} (script.*>|<.*iframe|<.*script|onmouseover=|onerror=|onload=|eval\(|alert\() [NC,OR]
+    RewriteCond %{QUERY_STRING} (\.|%2e){2,} [NC,OR]
+    RewriteCond %{QUERY_STRING} (localhost|loopback|127\.0\.0\.1) [NC,OR]
+    RewriteCond %{QUERY_STRING} (<|%3c|>|%3e|'|%27|"|%22) [NC]
+    RewriteRule ^(.*)$ - [F,L]
+    
+    # Block WordPress/common attack vectors (if not using WordPress)
+    RewriteRule ^(wp-admin|wp-content|wp-includes|wp-login\.php|xmlrpc\.php) - [F,L]
+    
+    # ============================================================================
+    # IP-BASED ACCESS CONTROL
+    # ============================================================================
+    # IP-based access control (skip for assets)
+    RewriteCond %{REQUEST_URI} !^/assets/ [NC]
+    RewriteCond %{REQUEST_URI} !^/api/public/ [NC]
+    RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ [NC]
+    
+    # IP whitelist entres (with location comments)
+    # Catonsville Office
+    RewriteCond %{REMOTE_ADDR} !^98\.233\.204\.84$
+    # Edgewater Office
+    RewriteCond %{REMOTE_ADDR} !^173\.67\.39\.5$
+    # Elkridge Office
+    RewriteCond %{REMOTE_ADDR} !^68\.134\.39\.4$
+    # Glen Burnie Office
+    RewriteCond %{REMOTE_ADDR} !^71\.244\.156\.161$
+    # Home
+    RewriteCond %{REMOTE_ADDR} !^68\.134\.31\.125$
+    # Leonardtown Office
+    RewriteCond %{REMOTE_ADDR} !^24\.245\.103\.202$
+    # Odenton Office
+    RewriteCond %{REMOTE_ADDR} !^72\.81\.228\.74$
+    # Prince Frederick Office
+    RewriteCond %{REMOTE_ADDR} !^73\.39\.186\.209$
+    # Server
+    RewriteCond %{REMOTE_ADDR} !^65\.181\.111\.128$
+    # Localhost
+    RewriteCond %{REMOTE_ADDR} !^127\.0\.0\.1$
+    RewriteRule ^(.*)$ - [F,L]
+    
+    # Route through index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+</IfModule>
+
+# ============================================================================
+# AUTHENTICATION
+# ============================================================================
+AuthType Basic
+# Allow server access without auth
+SetEnvIf Remote_Addr "^65.181.111.128$" noauth
+
+AuthName "Greater Maryland Pain Management - Authorized Access Only"
+AuthUserFile "/home/gmpmus/.htpasswds/passwd"
+
+# Allow assets without auth
+SetEnvIf Request_URI "^/assets/" noauth
+SetEnvIf Request_URI "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2)$" noauth
+SetEnvIf Request_URI "^/(favicon.*\.(ico|png|svg)|apple-touch-icon\.png|site\.webmanifest|web-app-manifest.*\.png)$" noauth
+
+<RequireAny>
+    Require env noauth
+    Require valid-user
+</RequireAny>
+
+# ============================================================================
+# SECURITY HEADERS (HIPAA COMPLIANT)
+# ============================================================================
+<IfModule mod_headers.c>
+    # Basic security headers
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://code.jquery.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+    
+    # Certificate Transparency
+    Header always set Expect-CT "max-age=86400, enforce"
+    
+    # Remove server information
+    Header always unset Server
+    Header always unset X-Powered-By
+    
+    # Remove ETags (for better caching control)
+    Header unset ETag
+    FileETag None
+</IfModule>
+
+# ============================================================================
+# FILE & DIRECTORY PROTECTION
+# ============================================================================
+# Protect sensitive files (expanded list)
+<FilesMatch "\.(env|log|sql|bak|conf|json|xml|yml|yaml|ini|lock|dist|git|gitignore|htpasswd|htaccess|config|db|sqlite|sqlite3)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protect .git directory
+<DirectoryMatch "/\.git">
+    Order Allow,Deny
+    Deny from all
+</DirectoryMatch>
+
+# Protect vendor directory (if exists)
+<Directory "vendor">
+    Order Allow,Deny
+    Deny from all
+</Directory>
+
+# Protect uploads directory (disable PHP execution)
+<Directory "uploads">
+    <IfModule LiteSpeed>
+        php_flag engine off
+    </IfModule>
+    <FilesMatch "\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi|exe|dll)$">
+        Order Allow,Deny
+        Deny from all
+    </FilesMatch>
+</Directory>
+
+# ============================================================================
+# UPLOAD RESTRICTIONS
+# ============================================================================
+# Limit upload size (10MB for medical documents)
+LimitRequestBody 10485760
+
+# ============================================================================
+# CACHING CONFIGURATION
+# ============================================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Default expiration
+    ExpiresDefault "access plus 1 month"
+    
+    # HTML (no cache for dynamic content)
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType application/xhtml+xml "access plus 0 seconds"
+    
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Fonts
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+</IfModule>
+
+# Cache control headers
+<IfModule mod_headers.c>
+    # Cache static assets
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # No cache for HTML and PHP
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================================
+# COMPRESSION
+# ============================================================================
+<IfModule mod_deflate.c>
+    # Compress text files
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/json application/xml
+    AddOutputFilterByType DEFLATE application/rss+xml application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/x-javascript application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject font/opentype
+    AddOutputFilterByType DEFLATE image/svg+xml image/x-icon
+    
+    # Remove browser bugs
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# ============================================================================
+# ERROR HANDLING
+# ============================================================================
+# Custom error pages
+ErrorDocument 400 /errors/400.html
+ErrorDocument 401 /errors/401.html
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 500 /errors/500.html
+ErrorDocument 502 /errors/502.html
+ErrorDocument 503 /errors/503.html
+
+# ============================================================================
+# PHP CONFIGURATION (if mod_php is available)
+# ============================================================================
+<IfModule mod_php.c>
+    # Security settings
+    php_flag display_errors off
+    php_flag log_errors on
+    php_value error_log /home/gmpmus/logs/php_errors.log
+    
+    # Session security
+    php_flag session.cookie_httponly on
+    php_flag session.cookie_secure on
+    php_value session.cookie_samesite Strict
+    php_value session.gc_maxlifetime 1800
+    
+    # Upload settings
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    
+    # Memory limit
+    php_value memory_limit 256M
+</IfModule>
+
+# ============================================================================
+# MONITORING
+# ============================================================================
+# Add custom log format for security monitoring
+<IfModule mod_log_config.c>
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %{X-Forwarded-For}i" gmpm_security
+</IfModule>
+
+# ============================================================================
+# END OF CONFIGURATION
+# ============================================================================

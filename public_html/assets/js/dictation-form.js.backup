@@ -1,0 +1,570 @@
+// dictation-form.js - Dictation System Form Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Session tracking variables
+    const sessionData = {
+        session_start_time: Date.now(),
+        dictation_count: 0,
+        current_dictation_start: null,
+        provider_id: null,
+        provider_name: null,
+        location: null,
+        procedure_date: null,
+        is_batch_mode: false
+    };
+    
+    // Timer variables
+    let idleTime = 0;
+    const MAX_IDLE = 15 * 60; // 15 minutes in seconds
+    let timerInterval;
+    let warningShown = false;
+    
+    // Cache DOM elements
+    const elements = {
+        // Setup section
+        provider: document.getElementById('provider'),
+        location: document.getElementById('location'),
+        procedureDate: document.getElementById('procedureDate'),
+        startBatchBtn: document.getElementById('startBatchBtn'),
+        setupSection: document.getElementById('setupSection'),
+        
+        // Batch banner
+        batchBanner: document.getElementById('batchBanner'),
+        bannerProvider: document.getElementById('bannerProvider'),
+        bannerLocation: document.getElementById('bannerLocation'),
+        bannerDate: document.getElementById('bannerDate'),
+        changeSettingsBtn: document.getElementById('changeSettingsBtn'),
+        
+        // Patient section
+        patientSection: document.getElementById('patientSection'),
+        patientName: document.getElementById('patientName'),
+        dob: document.getElementById('dob'),
+        procedureList: document.getElementById('procedureList'),
+        categoryFilter: document.getElementById('categoryFilter'),
+        
+        // Preview section
+        previewSection: document.getElementById('previewSection'),
+        previewContent: document.getElementById('previewContent'),
+        codeList: document.getElementById('codeList'),
+        copyBtn: document.getElementById('copyBtn'),
+        printBtn: document.getElementById('printBtn'),
+        
+        // Status footer
+        footerCount: document.getElementById('footerCount'),
+        footerLocation: document.querySelector('#footerLocation span'),
+        footerProvider: document.querySelector('#footerProvider span'),
+        footerDate: document.querySelector('#footerDate span'),
+        sessionTimer: document.getElementById('sessionTimer'),
+        dictationCount: document.getElementById('dictationCount'),
+        
+        // Other
+        alertContainer: document.getElementById('alertContainer'),
+        csrfToken: document.getElementById('csrfToken'),
+        timeoutModal: document.getElementById('timeoutModal'),
+        modalTimer: document.getElementById('modalTimer'),
+        continueBtn: document.getElementById('continueBtn'),
+        printFrame: document.getElementById('printFrame')
+    };
+    
+    // Current state
+    let currentProcedures = [];
+    let selectedProcedure = null;
+    
+    // Initialize
+    init();
+    
+    function init() {
+        setupEventListeners();
+        startIdleTimer();
+        logAudit('session_start');
+    }
+    
+    // Event Listeners
+    function setupEventListeners() {
+        // Setup form validation
+        elements.provider.addEventListener('change', validateSetup);
+        elements.location.addEventListener('change', validateSetup);
+        elements.procedureDate.addEventListener('change', validateSetup);
+        
+        // Start batch button
+        elements.startBatchBtn.addEventListener('click', startBatchMode);
+        
+        // Change settings button
+        elements.changeSettingsBtn.addEventListener('click', changeBatchSettings);
+        
+        // Patient form
+        elements.patientName.addEventListener('input', validatePatient);
+        elements.dob.addEventListener('change', validatePatient);
+        
+        // Category filter
+        elements.categoryFilter.addEventListener('click', function(e) {
+            if (e.target.classList.contains('category-btn')) {
+                filterByCategory(e.target.dataset.category);
+            }
+        });
+        
+        // Copy and print buttons
+        elements.copyBtn.addEventListener('click', copyDictation);
+        elements.printBtn.addEventListener('click', printDictation);
+        
+        // Continue button in timeout modal
+        elements.continueBtn.addEventListener('click', function() {
+            resetIdleTimer();
+            elements.timeoutModal.classList.remove('active');
+            warningShown = false;
+        });
+        
+        // Track activity for idle timer
+        ['mousemove', 'keypress', 'click', 'scroll', 'touchstart'].forEach(event => {
+            document.addEventListener(event, resetIdleTimer);
+        });
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', handlePageUnload);
+        
+        // Handle after print
+        window.addEventListener('afterprint', handleAfterPrint);
+    }
+    
+    // Validation Functions
+    function validateSetup() {
+        const isValid = elements.provider.value && 
+                       elements.location.value && 
+                       elements.procedureDate.value;
+        
+        elements.startBatchBtn.disabled = !isValid;
+        return isValid;
+    }
+    
+    function validatePatient() {
+        const isValid = elements.patientName.value.trim() && 
+                       elements.dob.value;
+        
+        if (isValid && selectedProcedure) {
+            populateTemplate();
+        }
+        
+        return isValid;
+    }
+    
+    // Batch Mode Functions
+    function startBatchMode() {
+        if (!validateSetup()) return;
+        
+        // Save batch settings
+        sessionData.provider_id = elements.provider.value;
+        sessionData.provider_name = elements.provider.options[elements.provider.selectedIndex].text;
+        sessionData.location = elements.location.value;
+        sessionData.procedure_date = elements.procedureDate.value;
+        sessionData.is_batch_mode = true;
+        
+        // Update UI
+        elements.setupSection.classList.add('collapsed');
+        elements.batchBanner.classList.add('active');
+        elements.patientSection.classList.add('active');
+        
+        // Update banner
+        elements.bannerProvider.textContent = sessionData.provider_name;
+        elements.bannerLocation.textContent = sessionData.location;
+        elements.bannerDate.textContent = formatDate(sessionData.procedure_date);
+        
+        // Update footer
+        updateFooter();
+        
+        // Load procedures for provider
+        loadProcedures(sessionData.provider_id);
+        
+        // Focus on patient name
+        elements.patientName.focus();
+        
+        // Log action
+        logAudit('select_provider', null, { provider_id: sessionData.provider_id });
+        logAudit('select_location', null, { location: sessionData.location });
+        logAudit('select_date', null, { date: sessionData.procedure_date });
+    }
+    
+    function changeBatchSettings() {
+        elements.setupSection.classList.remove('collapsed');
+        elements.batchBanner.classList.remove('active');
+        elements.patientSection.classList.remove('active');
+        
+        logAudit('change_settings');
+    }
+    
+    // Load Procedures
+    async function loadProcedures(providerId) {
+        try {
+            const response = await fetch(`/api/dictation/get-templates?provider_id=${providerId}`, {
+                headers: {
+                    'X-CSRF-Token': elements.csrfToken.value
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to load procedures');
+            
+            const data = await response.json();
+            if (data.success) {
+                currentProcedures = data.procedures;
+                displayProcedures(currentProcedures);
+            } else {
+                showAlert('error', data.error || 'Failed to load procedures');
+            }
+        } catch (error) {
+            showAlert('error', 'Error loading procedures: ' + error.message);
+        }
+    }
+    
+    // Display Procedures
+    function displayProcedures(procedures) {
+        elements.procedureList.innerHTML = '';
+        
+        procedures.forEach(proc => {
+            const item = document.createElement('div');
+            item.className = 'procedure-item';
+            item.dataset.procedureId = proc.id;
+            item.dataset.category = proc.category;
+            
+            item.innerHTML = `
+                <span>
+                    ${proc.is_favorite ? '<span class="favorite">⭐</span>' : ''}
+                    ${proc.name}
+                </span>
+                <span style="font-size: 0.875rem; color: var(--text-secondary);">
+                    ${proc.category}
+                </span>
+            `;
+            
+            item.addEventListener('click', () => selectProcedure(proc));
+            elements.procedureList.appendChild(item);
+        });
+    }
+    
+    // Filter by Category
+    function filterByCategory(category) {
+        // Update active button
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.category === category);
+        });
+        
+        // Filter procedures
+        let filtered = currentProcedures;
+        if (category !== 'all') {
+            filtered = currentProcedures.filter(p => p.category === category);
+        }
+        
+        displayProcedures(filtered);
+        logAudit('filter_category', null, { category });
+    }
+    
+    // Select Procedure
+    function selectProcedure(procedure) {
+        selectedProcedure = procedure;
+        sessionData.current_dictation_start = Date.now();
+        
+        // Update UI
+        document.querySelectorAll('.procedure-item').forEach(item => {
+            item.classList.toggle('selected', item.dataset.procedureId === procedure.id.toString());
+        });
+        
+        // Show preview if patient info is complete
+        if (validatePatient()) {
+            populateTemplate();
+        }
+        
+        logAudit('select_procedure', procedure.id, { procedure_name: procedure.name });
+    }
+    
+    // Populate Template
+    function populateTemplate() {
+        if (!selectedProcedure || !validatePatient()) return;
+        
+        // Get template content
+        let content = selectedProcedure.template_content || '';
+        
+        // Add custom intro/closing if available
+        if (selectedProcedure.custom_intro) {
+            content = selectedProcedure.custom_intro + '\n\n' + content;
+        }
+        if (selectedProcedure.custom_closing) {
+            content = content + '\n\n' + selectedProcedure.custom_closing;
+        }
+        
+        // Replace placeholders
+        const replacements = {
+            '[PATIENT_NAME]': elements.patientName.value.trim(),
+            '[DOB]': formatDate(elements.dob.value),
+            '[PROVIDER]': sessionData.provider_name,
+            '[LOCATION]': sessionData.location,
+            '[PROCEDURE_DATE]': formatDate(sessionData.procedure_date),
+            '[DATE]': formatDate(new Date()),
+            '[TIME]': new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+        };
+        
+        for (const [placeholder, value] of Object.entries(replacements)) {
+            content = content.replace(new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), value);
+        }
+        
+        // Display content
+        elements.previewContent.textContent = content;
+        elements.previewSection.classList.add('active');
+        
+        // Display billing codes
+        displayBillingCodes(selectedProcedure.billing_codes || []);
+        
+        logAudit('generate_dictation', selectedProcedure.id);
+    }
+    
+    // Display Billing Codes
+    function displayBillingCodes(codes) {
+        elements.codeList.innerHTML = '';
+        
+        codes.forEach(code => {
+            const tag = document.createElement('span');
+            tag.className = 'code-tag';
+            tag.textContent = `${code.cpt_code}${code.description ? ' - ' + code.description : ''}`;
+            elements.codeList.appendChild(tag);
+        });
+    }
+    
+    // Copy Dictation
+    function copyDictation() {
+        const content = elements.previewContent.textContent;
+        
+        navigator.clipboard.writeText(content).then(() => {
+            showAlert('success', 'Dictation copied to clipboard!');
+            logAudit('copy_dictation', selectedProcedure.id);
+        }).catch(err => {
+            showAlert('error', 'Failed to copy: ' + err.message);
+        });
+    }
+    
+    // Print Dictation
+    function printDictation() {
+        if (!selectedProcedure || !validatePatient()) return;
+        
+        logAudit('print_dictation', selectedProcedure.id);
+        
+        // Build print URL with parameters
+        const params = new URLSearchParams({
+            content: elements.previewContent.textContent,
+            patient_name: elements.patientName.value,
+            provider: sessionData.provider_name,
+            location: sessionData.location,
+            procedure_date: formatDate(sessionData.procedure_date),
+            billing_codes: (selectedProcedure.billing_codes || []).map(c => c.cpt_code).join(',')
+        });
+        
+        // Open print view in new window
+        const printWindow = window.open('/dictation/print?' + params.toString(), '_blank');
+        
+        // Track print completion
+        if (printWindow) {
+            printWindow.addEventListener('afterprint', handleAfterPrint);
+        }
+    }
+    
+    // Handle After Print
+    function handleAfterPrint() {
+        // Calculate duration
+        const duration = sessionData.current_dictation_start 
+            ? Math.floor((Date.now() - sessionData.current_dictation_start) / 1000)
+            : null;
+        
+        // Log completion with duration
+        if (selectedProcedure && duration) {
+            logAudit('print_dictation', selectedProcedure.id, { 
+                duration_seconds: duration,
+                procedure_name: selectedProcedure.name
+            });
+        }
+        
+        // Clear patient fields
+        clearPatientFields();
+        
+        // Increment counter
+        incrementPrintCounter();
+        
+        // Show success message
+        showAlert('success', '✓ Dictation printed - Ready for next patient');
+        
+        // Focus back on patient name
+        elements.patientName.focus();
+    }
+    
+    // Clear Patient Fields
+    function clearPatientFields() {
+        elements.patientName.value = '';
+        elements.dob.value = '';
+        selectedProcedure = null;
+        sessionData.current_dictation_start = null;
+        
+        // Clear preview
+        elements.previewSection.classList.remove('active');
+        elements.previewContent.textContent = '';
+        elements.codeList.innerHTML = '';
+        
+        // Clear procedure selection
+        document.querySelectorAll('.procedure-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+    }
+    
+    // Increment Print Counter
+    function incrementPrintCounter() {
+        sessionData.dictation_count++;
+        elements.dictationCount.textContent = sessionData.dictation_count;
+        elements.footerCount.textContent = sessionData.dictation_count;
+    }
+    
+    // Timer Functions
+    function startIdleTimer() {
+        timerInterval = setInterval(() => {
+            idleTime++;
+            updateTimerDisplay();
+            
+            // Show warning at 1 minute
+            if (idleTime >= MAX_IDLE - 60 && !warningShown) {
+                showTimeoutWarning();
+            }
+            
+            // Timeout at 15 minutes
+            if (idleTime >= MAX_IDLE) {
+                handleTimeout();
+            }
+        }, 1000);
+    }
+    
+    function resetIdleTimer() {
+        idleTime = 0;
+        warningShown = false;
+        elements.timeoutModal.classList.remove('active');
+    }
+    
+    function updateTimerDisplay() {
+        const remaining = MAX_IDLE - idleTime;
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+        const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        elements.sessionTimer.textContent = display;
+        
+        // Update timer styling
+        elements.sessionTimer.classList.remove('warning', 'critical');
+        if (remaining <= 60) {
+            elements.sessionTimer.classList.add('critical');
+        } else if (remaining <= 120) {
+            elements.sessionTimer.classList.add('warning');
+        }
+        
+        // Update modal timer if shown
+        if (warningShown) {
+            elements.modalTimer.textContent = remaining;
+        }
+    }
+    
+    function showTimeoutWarning() {
+        warningShown = true;
+        elements.timeoutModal.classList.add('active');
+    }
+    
+    function handleTimeout() {
+        clearInterval(timerInterval);
+        
+        // Log session end
+        logAudit('session_timeout', null, {
+            dictation_count: sessionData.dictation_count,
+            session_duration: Math.floor((Date.now() - sessionData.session_start_time) / 1000)
+        });
+        
+        // Clear all data
+        sessionStorage.clear();
+        
+        // Show message and reload
+        alert('Your session has expired due to inactivity. The page will now reload.');
+        window.location.reload();
+    }
+    
+    // Handle Page Unload
+    function handlePageUnload() {
+        const sessionEndData = {
+            action: 'session_end',
+            dictation_count: sessionData.dictation_count,
+            metadata: {
+                provider_id: sessionData.provider_id,
+                location: sessionData.location,
+                session_duration: Math.floor((Date.now() - sessionData.session_start_time) / 1000)
+            }
+        };
+        
+        // Use sendBeacon for reliable delivery
+        navigator.sendBeacon('/api/dictation/log-audit', JSON.stringify(sessionEndData));
+    }
+    
+    // Audit Logging
+    function logAudit(action, procedureId = null, metadata = {}) {
+        const data = {
+            action: action,
+            procedure_id: procedureId,
+            provider_id: sessionData.provider_id,
+            provider_name: sessionData.provider_name,
+            location: sessionData.location,
+            metadata: metadata
+        };
+        
+        // For session_end, add dictation count
+        if (action === 'session_end') {
+            data.dictation_count = sessionData.dictation_count;
+        }
+        
+        // For dictation actions, add duration if available
+        if (action === 'print_dictation' && metadata.duration_seconds) {
+            data.duration_seconds = metadata.duration_seconds;
+        }
+        
+        // Send to server
+        fetch('/api/dictation/log-audit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': elements.csrfToken.value
+            },
+            body: JSON.stringify(data)
+        }).catch(err => {
+            console.error('Audit log error:', err);
+        });
+    }
+    
+    // Utility Functions
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    }
+    
+    function showAlert(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        
+        const icon = type === 'error' ? '❌' : '✓';
+        alertDiv.innerHTML = `${icon} ${message}`;
+        
+        elements.alertContainer.innerHTML = '';
+        elements.alertContainer.appendChild(alertDiv);
+        
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+    
+    function updateFooter() {
+        elements.footerLocation.textContent = sessionData.location || 'Not set';
+        elements.footerProvider.textContent = sessionData.provider_name || 'Not set';
+        elements.footerDate.textContent = sessionData.procedure_date 
+            ? formatDate(sessionData.procedure_date) 
+            : 'Not set';
+    }
+});

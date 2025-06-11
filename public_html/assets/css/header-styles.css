@@ -1,0 +1,339 @@
+/* File: /assets/css/header-styles.css */
+/* GMPM Responsive Header Styles */
+
+/* Header Base Styles */
+.header {
+    background: var(--card-background);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1rem;
+    min-width: 0; /* Prevent flex overflow */
+}
+
+/* Logo Section */
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.logo-text-full {
+    display: block;
+}
+
+.logo-text-short {
+    display: none;
+}
+
+.logo-subtext {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* Search Section */
+.header-search {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 2rem;
+    min-width: 0; /* Allow shrinking */
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    transition: var(--transition);
+    background: var(--background-color);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: var(--card-background);
+    box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    width: 20px;
+    height: 20px;
+}
+
+/* User Section */
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.user-welcome {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-welcome-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.125rem;
+    flex-shrink: 0;
+}
+
+.admin-badge {
+    background: #fbbf24;
+    color: #78350f;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Mobile Controls */
+.header-actions-mobile {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-menu-toggle,
+.mobile-search-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.mobile-menu-toggle:hover,
+.mobile-search-toggle:hover {
+    background: var(--background-color);
+    border-radius: var(--radius);
+}
+
+.mobile-menu-toggle svg,
+.mobile-search-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--card-background);
+    box-shadow: var(--shadow-md);
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: var(--radius);
+}
+
+.mobile-search {
+    padding: 1rem 0;
+}
+
+.mobile-quick-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+}
+
+.mobile-link {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobile-link:hover {
+    background: var(--background-color);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+    .header-search {
+        margin: 0 1rem;
+    }
+}
+
+@media (max-width: 1024px) {
+    .user-welcome-text {
+        display: none;
+    }
+    
+    .header-search {
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        height: 56px;
+    }
+
+    .logo-text-full {
+        display: none;
+    }
+
+    .logo-text-short {
+        display: block;
+    }
+
+    .logo-subtext {
+        display: none;
+    }
+
+    .header-search {
+        display: none;
+    }
+
+    .header-user {
+        display: none;
+    }
+
+    .mobile-menu-toggle,
+    .mobile-search-toggle {
+        display: block;
+    }
+
+    .header-actions-mobile {
+        display: flex;
+    }
+
+    .mobile-menu {
+        top: 56px;
+        max-height: calc(100vh - 56px);
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 0 0.75rem;
+    }
+    
+    .mobile-menu {
+        padding: 0.75rem;
+    }
+}
+
+/* Utility class to prevent body scroll when menu is open */
+body.mobile-menu-open {
+    overflow: hidden;
+}

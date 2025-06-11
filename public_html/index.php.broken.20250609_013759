@@ -1,0 +1,175 @@
+<?php
+// GMPM Application Entry Point
+define('ROOT_PATH', dirname(__DIR__));
+define('APP_PATH', ROOT_PATH . '/app');
+define('PUBLIC_PATH', __DIR__);
+define('STORAGE_PATH', ROOT_PATH . '/storage');
+
+// Security check - ensure critical files aren't accessible
+if (file_exists(__DIR__ . '/.env')) {
+    die('Security Error: .env file should not be in public directory!');
+}
+
+// Check if vendor exists in new location
+if (!file_exists(APP_PATH . '/vendor/autoload.php')) {
+    die('Error: Vendor directory not found. Please check installation.');
+}
+
+// Autoload
+require_once APP_PATH . '/vendor/autoload.php';
+
+// Load environment variables
+if (file_exists(APP_PATH . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(APP_PATH);
+    $dotenv->load();
+}
+
+// Start session for all requests
+session_start();
+
+// Basic routing
+$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = rtrim($requestUri, '/');
+
+// Log access for security monitoring
+error_log("Access: " . $_SERVER['REMOTE_ADDR'] . " - " . $requestUri);
+
+// Route the request
+switch (true) {
+    case $requestUri === '' || $requestUri === '/index.php':
+
+case $requestUri === '/test123':
+    require APP_PATH . '/public-endpoints/test123.php';
+    break;
+
+    case $requestUri === '/phone-note':
+        require APP_PATH . '/public-endpoints/phone-note.php';
+        break;
+
+    case $requestUri === '/it-support':
+        require APP_PATH . '/public-endpoints/it-support.php';
+        break;
+
+    case $requestUri === '/view-tickets':
+        require APP_PATH . '/public-endpoints/view-tickets.php';
+        break;
+
+    case strpos($requestUri, '/admin') === 0:
+        // Add authentication check here
+        $adminController = APP_PATH . '/src/Controllers/AdminController.php';
+        if (file_exists($adminController)) {
+            require $adminController;
+        } else {
+            http_response_code(404);
+            echo "Admin area not implemented yet";
+        }
+        break;
+
+    case $requestUri === '/api/dashboard/stats':
+        require APP_PATH . '/src/Controllers/DashboardController.php';
+        $controller = new \App\Controllers\DashboardController();
+        $controller->getStats();
+        break;
+
+    case strpos($requestUri, '/api') === 0:
+        // API routes stay in public for now
+        $apiPath = str_replace('/api', '', $requestUri);
+        $apiFile = PUBLIC_PATH . '/api' . $apiPath . '.php';
+        if (file_exists($apiFile)) {
+            require $apiFile;
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'API endpoint not found']);
+        }
+        break;
+
+    case strpos($requestUri, '/assets') === 0:
+        // Let server handle static files
+        return false;
+        break;
+
+    case $requestUri === '/forms/work-note':
+        require APP_PATH . '/templates/views/forms/work-note.php';
+        break;
+
+    case $requestUri === '/forms/new-patient':
+        require APP_PATH . '/templates/views/forms/patient/new-patient.php';
+        break;
+
+    case strpos($requestUri, '/dictation') === 0:
+        require_once APP_PATH . '/src/Controllers/DictationController.php';
+        $controller = new \App\Controllers\DictationController();
+        
+        // Parse the route
+        $parts = explode('/', trim($requestUri, '/'));
+        
+        switch(count($parts)) {
+            case 1: // /dictation
+                $controller->index();  // Show procedure list
+                break;
+                
+            case 2: // /dictation/{action}
+                switch($parts[1]) {
+                    case 'procedures':
+                        // AJAX endpoint to get procedures list
+                        $controller->procedures();
+                        break;
+                    default:
+                        http_response_code(404);
+                        echo "404 - Not Found";
+                }
+                break;
+                
+            case 3: // /dictation/{action}/{id}
+                switch($parts[1]) {
+                    case 'create':
+                        // Show dictation form (client-side only)
+                        $controller->create($parts[2]);
+                        break;
+                    case 'template':
+                        // AJAX endpoint to get template (no PHI)
+                        $controller->getTemplate($parts[2]);
+                        break;
+                    default:
+                        http_response_code(404);
+                        echo "404 - Not Found";
+                }
+                break;
+                
+            default:
+                http_response_code(404);
+                echo "404 - Not Found";
+        }
+        break;
+
+    // Provider management routes (admin only)
+    case strpos($requestUri, '/admin/providers') === 0:
+        require_once APP_PATH . 
+'/src/Controllers/ProviderManagementController.php';
+        $controller = new \App\Controllers\ProviderManagementController();
+
+        $parts = explode('/', trim($requestUri, '/'));
+
+        switch($parts[2] ?? '') {
+            case '':
+                $controller->index();
+                break;
+            case 'create':
+                $controller->create();
+                break;
+            case 'deactivate':
+                $controller->deactivate($parts[3] ?? 0);
+                break;
+            default:
+                http_response_code(404);
+        }
+        break;
+
+    default:
+        http_response_code(404);
+        if (file_exists(__DIR__ . '/errors/404.html')) {
+            include __DIR__ . '/errors/404.html';
+        } else {
+            echo "404 - Not Found";
+        }
+}

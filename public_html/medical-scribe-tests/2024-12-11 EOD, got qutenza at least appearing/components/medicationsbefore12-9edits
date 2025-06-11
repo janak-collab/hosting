@@ -1,0 +1,139 @@
+<section class="medications">
+    <h2>Medications</h2>
+    <div id="medications-error-container"></div>
+    
+    <div id="medications-section">
+        <?php foreach (MEDICATION_CATEGORIES_INFO as $category_key => $category_info): ?>
+            <div class="medication-card">
+                <div class="medication-card-header">
+                    <h3><?php echo htmlspecialchars($category_info['display_name']); ?></h3>
+                    <div class="clear-selection">
+                        <label class="radio-option">
+                            <input type="radio" 
+                                   name="<?php echo htmlspecialchars($category_info['form_field']); ?>" 
+                                   value="" 
+                                   checked>
+                            No <?php echo htmlspecialchars($category_info['display_name']); ?>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="medications-list">
+                    <?php foreach (MEDICATION_DETAILS as $med_key => $medication): ?>
+                        <?php if ($medication['category'] === $category_key): ?>
+                            <div class="medication-item">
+                                <label class="radio-option">
+                                    <input type="radio" 
+                                           name="<?php echo htmlspecialchars($category_info['form_field']); ?>" 
+                                           value="<?php echo htmlspecialchars($med_key); ?>"
+                                           onclick="handleMedicationSelection('<?php echo htmlspecialchars($category_info['form_field']); ?>')">
+                                    <?php echo htmlspecialchars($medication['display_name']); ?>
+                                </label>
+                                
+                                <div id="details-<?php echo $med_key; ?>" class="medication-details">
+                                    <?php if (isset($medication['doses'])): ?>
+                                        <div class="radio-group">
+                                            <span class="option-label">Dose:</span>
+                                            <div class="options-wrapper">
+                                                <?php foreach ($medication['doses'] as $dose): ?>
+                                                    <label class="radio-option">
+                                                        <input type="radio" 
+                                                               name="<?php echo htmlspecialchars($med_key . '_dose'); ?>" 
+                                                               value="<?php echo htmlspecialchars($dose); ?>"
+                                                               disabled>
+                                                        <?php echo htmlspecialchars($dose); ?>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                            
+                                    <?php if (isset($medication['frequencies'])): ?>
+                                        <div class="frequency-options">
+                                            <span class="option-label">Frequency:</span>
+                                            <div class="options-wrapper">
+                                                <?php foreach ($medication['frequencies'] as $frequency): ?>
+                                                    <label class="radio-option">
+                                                        <input type="radio" 
+                                                               name="<?php echo htmlspecialchars($med_key . '_frequency'); ?>" 
+                                                               value="<?php echo htmlspecialchars($frequency); ?>"
+                                                               disabled>
+                                                        <?php echo htmlspecialchars($frequency); ?>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to toggle dosage options
+    function toggleDosageOptions(medicationItem, show) {
+        const medicationDetails = medicationItem.querySelector('.medication-details');
+        if (medicationDetails) {
+            if (show) {
+                medicationDetails.classList.add('active');
+            } else {
+                medicationDetails.classList.remove('active');
+            }
+            
+            // Enable/disable inputs based on selection
+            const inputs = medicationDetails.querySelectorAll('input[type="radio"]');
+            inputs.forEach(input => {
+                input.disabled = !show;
+                if (!show) {
+                    input.checked = false;
+                }
+            });
+        }
+    }
+
+    // Handle medication selection changes
+    function handleMedicationSelection(category) {
+        const container = document.querySelector(`[name="${category}"]`).closest('.medication-card');
+        const medications = container.querySelectorAll('.medication-item');
+        
+        medications.forEach(medication => {
+            const radio = medication.querySelector(`input[name="${category}"]`);
+            if (radio) {
+                toggleDosageOptions(medication, radio.checked && radio.value !== '');
+            }
+        });
+    }
+
+    // Add event listeners to all medication radio buttons
+    ['NSAID', 'mrelaxer', 'nerve_agent'].forEach(category => {
+        const radios = document.querySelectorAll(`input[name="${category}"]`);
+        radios.forEach(radio => {
+            radio.addEventListener('change', () => handleMedicationSelection(category));
+        });
+        
+        // Initialize state
+        handleMedicationSelection(category);
+    });
+
+    // Clear error messages when making new selections
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const errorContainer = document.getElementById('medications-error-container');
+            if (errorContainer) {
+                errorContainer.innerHTML = '';
+            }
+            
+            // Clear field-specific error messages
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.textContent = '';
+            });
+        });
+    });
+});
+</script>

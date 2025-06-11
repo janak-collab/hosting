@@ -1,0 +1,55 @@
+<?php
+// GMPM Application Entry Point
+define('ROOT_PATH', dirname(__DIR__));
+define('APP_PATH', ROOT_PATH . '/app');
+define('PUBLIC_PATH', __DIR__);
+define('STORAGE_PATH', ROOT_PATH . '/storage');
+define('CONFIG_PATH', APP_PATH . '/config');
+define('RESOURCE_PATH', APP_PATH . '/resources');
+
+// Security check
+if (file_exists(__DIR__ . '/.env')) {
+    die('Security Error: .env file should not be in public directory!');
+}
+
+// Autoload
+require_once APP_PATH . '/vendor/autoload.php';
+require_once APP_PATH . '/src/bootstrap.php';
+
+// Initialize middleware stack
+$middlewareStack = [
+    new \App\Middleware\SecurityHeaders(),
+    new \App\Middleware\IpWhitelist(),
+    new \App\Middleware\RateLimit(),
+    new \App\Middleware\Auth(),
+    new \App\Middleware\CsrfProtection()
+];
+
+// Process request through middleware
+$request = ['uri' => $_SERVER['REQUEST_URI'], 'method' => 
+$_SERVER['REQUEST_METHOD']];
+$next = function($request) {
+    // Initialize router
+    $router = new \App\Router();
+    $httpMethod = $_SERVER['REQUEST_METHOD'];
+    $uri = $_SERVER['REQUEST_URI'];
+    
+    // Remove query string from URI
+    if (false !== $pos = strpos($uri, '?')) {
+        $uri = substr($uri, 0, $pos);
+    }
+    $uri = rawurldecode($uri);
+    
+    // Dispatch the request
+    $router->dispatch($httpMethod, $uri);
+};
+
+// Run middleware chain
+foreach (array_reverse($middlewareStack) as $middleware) {
+    $next = function($request) use ($middleware, $next) {
+        return $middleware->handle($request, $next);
+    };
+}
+
+// Execute the chain
+$next($request);

@@ -1,0 +1,45 @@
+case strpos($requestUri, '/admin') === 0:
+    require_once APP_PATH . '/src/Controllers/AdminController.php';
+    require_once APP_PATH . '/src/Controllers/ITSupportController.php';
+    require_once APP_PATH . '/src/Controllers/PhoneNoteController.php';
+    
+    $adminController = new \App\Controllers\AdminController();
+    
+    // Parse admin routes
+    $adminPath = str_replace('/admin', '', $requestUri);
+    $adminPath = rtrim($adminPath, '/');
+    
+    // Route to appropriate method
+    switch ($adminPath) {
+        case '':
+        case '/':
+            $adminController->index();
+            break;
+        case '/login':
+            $adminController->login();
+            break;
+        case '/tickets':
+            $adminController->tickets();
+            break;
+        case '/logout':
+            $adminController->logout();
+            break;
+        case '/phone-notes':
+            $adminController->phoneNotes();
+            break;
+        default:
+            // Handle dynamic routes (e.g., /admin/phone-notes/view/123)
+            if (preg_match('/^\/phone-notes\/view\/(\d+)$/', $adminPath, $matches)) {
+                $adminController->viewPhoneNote($matches[1]);
+            } elseif (preg_match('/^\/phone-notes\/print\/(\d+)$/', $adminPath, $matches)) {
+                $adminController->printPhoneNote($matches[1]);
+            } else {
+                http_response_code(404);
+                if (file_exists(__DIR__ . '/errors/404.html')) {
+                    include __DIR__ . '/errors/404.html';
+                } else {
+                    echo "404 - Not Found";
+                }
+            }
+    }
+    break;

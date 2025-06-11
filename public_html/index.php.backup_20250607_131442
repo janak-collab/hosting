@@ -1,0 +1,66 @@
+<?php
+// GMPM Application Entry Point with Router
+
+// Define base paths
+define('BASE_PATH', dirname(__DIR__));
+define('APP_PATH', BASE_PATH . '/app');
+define('PUBLIC_PATH', __DIR__);
+
+// Security check
+if (file_exists(__DIR__ . '/.env')) {
+    die('Security Error: .env file should not be in public directory!');
+}
+
+// Check vendor directory
+if (!file_exists(APP_PATH . '/vendor/autoload.php')) {
+    die('Error: Vendor directory not found. Please run composer install.');
+}
+
+// Load bootstrap
+require_once APP_PATH . '/src/bootstrap.php';
+
+// Initialize router
+$router = new \App\Core\Router();
+
+// Load web routes
+$webRoutes = require APP_PATH . '/routes/web.php';
+$webRoutes($router);
+error_log("Routes loaded, testing /status route exists");
+
+// Load API routes
+$apiRoutes = require APP_PATH . '/routes/api.php';
+$apiRoutes($router);
+
+// Get request details
+$method = $_SERVER['REQUEST_METHOD'];
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Log access for security monitoring
+\App\Services\Logger::channel('access')->info("Access", [
+    'ip' => $_SERVER['REMOTE_ADDR'],
+    'method' => $method,
+    'uri' => $uri,
+    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
+]);
+
+try {
+    // Add debug output
+    error_log("About to dispatch: Method=$method, URI=$uri");
+
+    // Dispatch the request
+    $router->dispatch($method, $uri);
+} catch (\Exception $e) {
+    // Log the error
+    \App\Services\Logger::channel('app')->error("Router exception", [
+        'message' => $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ]);
+    
+    // Show error page
+    http_response_code(500);
+    if (file_exists(RESOURCE_PATH . '/views/errors/500.php')) {
+        include RESOURCE_PATH . '/views/errors/500.php';
+    } else {
+        echo "500 - Internal Server Error";
+    }
+}

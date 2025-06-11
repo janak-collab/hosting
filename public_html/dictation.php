@@ -1,0 +1,941 @@
+<?php
+// Force no caching
+header('Cache-Control: no-cache, no-store, must-revalidate, private');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('X-LiteSpeed-Cache-Control: no-cache');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('ETag: "' . uniqid() . '"');
+
+// Force reload if cached
+if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || 
+isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+    header('HTTP/1.1 200 OK');
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Dictation - Greater Maryland Pain Management</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <style>
+        /* Enhanced styles for dictation form */
+        .privacy-panel {
+            background: #f0f9ff;
+            border: 1px solid #0284c7;
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .privacy-settings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .privacy-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .privacy-option input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+        }
+        
+        .session-timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+        
+        .timer-warning {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .timer-critical {
+            color: var(--error-color);
+            font-weight: 600;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .procedure-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .procedure-item {
+            position: relative;
+        }
+        
+        .procedure-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .procedure-label {
+            display: block;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: calc(var(--radius) * 0.75);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+            background: white;
+        }
+        
+        .procedure-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(242, 101, 34, 0.05);
+        }
+        
+        .procedure-item input:checked + .procedure-label {
+            border-color: var(--primary-color);
+            background: rgba(242, 101, 34, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .dictation-output {
+            background: #f7fafc;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .dictation-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .dictation-output {
+                border: none;
+                padding: 0;
+                font-size: 11pt;
+                line-height: 1.8;
+            }
+            
+            .watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 120pt;
+                color: rgba(0, 0, 0, 0.05);
+                z-index: -1;
+                font-weight: bold;
+                pointer-events: none;
+            }
+        }
+        
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .template-select {
+            margin-bottom: 1rem;
+        }
+        
+        .quick-phrases {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        
+        .quick-phrase {
+            padding: 0.25rem 0.75rem;
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .quick-phrase:hover {
+            border-color: var(--primary-color);
+            background: white;
+        }
+        
+        .dict-header {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .dict-section {
+            margin-bottom: 1rem;
+        }
+        
+        .dict-label {
+            font-weight: bold;
+        }
+        
+        .watermark-option {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>📝 Medical Dictation</h1>
+                <p>Generate procedure dictations with standardized 
+templates</p>
+            </div>
+            
+            <div class="form-content">
+                <!-- Privacy Settings Panel -->
+                <div class="privacy-panel no-print">
+                    <div class="privacy-settings">
+                        <div class="privacy-option">
+                            <input type="checkbox" id="autoLogout" checked>
+                            <label for="autoLogout">Auto-logout after 15 
+min</label>
+                        </div>
+                        <div class="privacy-option">
+                            <input type="checkbox" id="autoClear" checked>
+                            <label for="autoClear">Clear form after 
+print</label>
+                        </div>
+                        <div class="privacy-option">
+                            <input type="checkbox" id="addNotice" checked>
+                            <label for="addNotice">Add confidentiality notice 
+to copies</label>
+                        </div>
+                    </div>
+                    <div class="watermark-option privacy-option">
+                        <input type="checkbox" id="addWatermark">
+                        <label for="addWatermark">Add CONFIDENTIAL 
+watermark</label>
+                    </div>
+                    <div class="session-timer">
+                        <span>⏱️ Session:</span>
+                        <span id="sessionTimer">15:00</span>
+                    </div>
+                </div>
+                
+                <div id="alertContainer"></div>
+                
+                <form id="dictationForm" class="no-print">
+                    <!-- Patient Information Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patientName" class="form-label">
+                                Patient Name <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="patientName" 
+                                name="patientName" 
+                                class="form-input"
+                                placeholder="Last, First"
+                                required
+                                maxlength="100"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dos" class="form-label">
+                                Date of Service <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="date" 
+                                id="dos" 
+                                name="dos" 
+                                class="form-input"
+                                required
+                                value="<?php echo date('Y-m-d'); ?>"
+                            >
+                        </div>
+                    </div>
+                    
+                    <!-- Template Selection -->
+                    <div class="form-group template-select">
+                        <label for="template" class="form-label">
+                            Dictation Template <span class="required">*</span>
+                        </label>
+                        <select id="template" name="template" 
+class="form-select" required>
+                            <option value="">Select a template...</option>
+                            <option value="injection">Pain Injection 
+Template</option>
+                            <option value="followup">Follow-up Visit</option>
+                            <option value="initial">Initial 
+Consultation</option>
+                            <option value="procedure">Procedure Note</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Procedures Section -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Procedures Performed <span 
+class="required">*</span>
+                        </label>
+                        <div class="procedure-grid" id="procedureList">
+                            <!-- Common Injections -->
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc1" 
+name="procedures[]" value="Cervical Epidural Steroid Injection">
+                                <label for="proc1" 
+class="procedure-label">Cervical ESI</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc2" 
+name="procedures[]" value="Lumbar Epidural Steroid Injection">
+                                <label for="proc2" 
+class="procedure-label">Lumbar ESI</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc3" 
+name="procedures[]" value="Caudal Epidural Steroid Injection">
+                                <label for="proc3" 
+class="procedure-label">Caudal ESI</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc4" 
+name="procedures[]" value="Facet Joint Injection">
+                                <label for="proc4" 
+class="procedure-label">Facet Joint Injection</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc5" 
+name="procedures[]" value="Medial Branch Block">
+                                <label for="proc5" 
+class="procedure-label">Medial Branch Block</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc6" 
+name="procedures[]" value="Sacroiliac Joint Injection">
+                                <label for="proc6" class="procedure-label">SI 
+Joint Injection</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc7" 
+name="procedures[]" value="Trigger Point Injection">
+                                <label for="proc7" 
+class="procedure-label">Trigger Point Injection</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc8" 
+name="procedures[]" value="Radiofrequency Ablation">
+                                <label for="proc8" class="procedure-label">RF 
+Ablation</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc9" 
+name="procedures[]" value="Stellate Ganglion Block">
+                                <label for="proc9" 
+class="procedure-label">Stellate Ganglion Block</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc10" 
+name="procedures[]" value="Lumbar Sympathetic Block">
+                                <label for="proc10" 
+class="procedure-label">Lumbar Sympathetic Block</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc11" 
+name="procedures[]" value="Spinal Cord Stimulator Trial">
+                                <label for="proc11" class="procedure-label">SCS 
+Trial</label>
+                            </div>
+                            <div class="procedure-item">
+                                <input type="checkbox" id="proc12" 
+name="procedures[]" value="Discography">
+                                <label for="proc12" 
+class="procedure-label">Discography</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Location -->
+                    <div class="form-group">
+                        <label for="location" class="form-label">
+                            Procedure Location <span class="required">*</span>
+                        </label>
+                        <select id="location" name="location" 
+class="form-select" required>
+                            <option value="">Select location...</option>
+                            <option value="Catonsville">Catonsville</option>
+                            <option value="Edgewater">Edgewater</option>
+                            <option value="Elkridge">Elkridge</option>
+                            <option value="Glen Burnie">Glen Burnie</option>
+                            <option value="Leonardtown">Leonardtown</option>
+                            <option value="Odenton">Odenton</option>
+                            <option value="Prince Frederick">Prince 
+Frederick</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Additional Notes -->
+                    <div class="form-group">
+                        <label for="notes" class="form-label">
+                            Additional Clinical Notes
+                        </label>
+                        <textarea 
+                            id="notes" 
+                            name="notes" 
+                            class="form-textarea"
+                            placeholder="Enter any additional clinical notes, 
+complications, or patient responses..."
+                            rows="4"
+                        ></textarea>
+                        <div class="quick-phrases">
+                            <span class="quick-phrase" data-text="Patient 
+tolerated procedure well.">Tolerated well</span>
+                            <span class="quick-phrase" data-text="No immediate 
+complications noted.">No complications</span>
+                            <span class="quick-phrase" data-text="Sterile 
+technique maintained throughout.">Sterile technique</span>
+                            <span class="quick-phrase" data-text="Fluoroscopic 
+guidance utilized.">Fluoro guided</span>
+                            <span class="quick-phrase" data-text="Contrast 
+spread confirmed.">Contrast confirmed</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Provider -->
+                    <div class="form-group">
+                        <label for="provider" class="form-label">
+                            Provider <span class="required">*</span>
+                        </label>
+                        <select id="provider" name="provider" 
+class="form-select" required>
+                            <option value="">Select provider...</option>
+                            <option value="Dr. Smith">Dr. Smith</option>
+                            <option value="Dr. Johnson">Dr. Johnson</option>
+                            <option value="Dr. Williams">Dr. Williams</option>
+                            <option value="Dr. Brown">Dr. Brown</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" 
+onclick="clearForm()">
+                            Clear Form
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Generate Dictation
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Dictation Output -->
+                <div id="dictationOutput" class="dictation-output" 
+style="display: none;">
+                    <div id="watermark" class="watermark" style="display: 
+none;">CONFIDENTIAL</div>
+                    <div id="dictationContent"></div>
+                </div>
+                
+                <div id="dictationActions" class="dictation-actions no-print" 
+style="display: none;">
+                    <button onclick="copyDictation()" class="btn btn-secondary 
+btn-icon">
+                        <span>📋</span> Copy to Clipboard
+                    </button>
+                    <button onclick="printDictation()" class="btn btn-primary 
+btn-icon">
+                        <span>🖨️</span> Print Dictation
+                    </button>
+                    <button onclick="newDictation()" class="btn btn-secondary 
+btn-icon">
+                        <span>➕</span> New Dictation
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer no-print">
+            <p>Greater Maryland Pain Management</p>
+            <p><a href="/">Back to Portal</a></p>
+        </div>
+    </div>
+    
+    <!-- Copy notification -->
+    <div id="copyNotification" class="copy-notification">
+        ✓ Dictation copied to clipboard
+    </div>
+    
+    <script>
+        // Session Management
+        let sessionTimeout;
+        let sessionWarningTimeout;
+        let timeRemaining = 15 * 60; // 15 minutes in seconds
+        
+        function startSessionTimer() {
+            const timerElement = document.getElementById('sessionTimer');
+            
+            // Update timer every second
+            const timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    handleSessionTimeout();
+                    return;
+                }
+                
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerElement.textContent = 
+`${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Change color based on time remaining
+                if (timeRemaining <= 60) {
+                    timerElement.classList.add('timer-critical');
+                } else if (timeRemaining <= 180) {
+                    timerElement.classList.add('timer-warning');
+                }
+            }, 1000);
+            
+            // Set warning at 2 minutes
+            sessionWarningTimeout = setTimeout(() => {
+                showAlert('warning', 'Your session will expire in 2 minutes. 
+Please save your work.');
+            }, 13 * 60 * 1000);
+            
+            // Set timeout at 15 minutes
+            sessionTimeout = setTimeout(() => {
+                handleSessionTimeout();
+            }, 15 * 60 * 1000);
+        }
+        
+        function resetSessionTimer() {
+            // Clear existing timeouts
+            clearTimeout(sessionTimeout);
+            clearTimeout(sessionWarningTimeout);
+            
+            // Reset time remaining
+            timeRemaining = 15 * 60;
+            
+            // Reset timer display
+            const timerElement = document.getElementById('sessionTimer');
+            timerElement.textContent = '15:00';
+            timerElement.classList.remove('timer-warning', 'timer-critical');
+            
+            // Start new timer if auto-logout is enabled
+            if (document.getElementById('autoLogout').checked) {
+                startSessionTimer();
+            }
+        }
+        
+        function handleSessionTimeout() {
+            showAlert('error', 'Session expired. Redirecting to login...');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        }
+        
+        // Initialize session management
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('autoLogout').checked) {
+                startSessionTimer();
+            }
+            
+            // Reset timer on activity
+            ['mousedown', 'keypress', 'scroll', 'touchstart'].forEach(event => 
+{
+                document.addEventListener(event, () => {
+                    if (document.getElementById('autoLogout').checked) {
+                        resetSessionTimer();
+                    }
+                }, true);
+            });
+            
+            // Handle auto-logout toggle
+            document.getElementById('autoLogout').addEventListener('change', 
+function() {
+                if (this.checked) {
+                    resetSessionTimer();
+                } else {
+                    clearTimeout(sessionTimeout);
+                    clearTimeout(sessionWarningTimeout);
+                    document.getElementById('sessionTimer').textContent = 
+'--:--';
+                }
+            });
+        });
+        
+        // Quick phrases functionality
+        document.querySelectorAll('.quick-phrase').forEach(phrase => {
+            phrase.addEventListener('click', function() {
+                const notesField = document.getElementById('notes');
+                const text = this.getAttribute('data-text');
+                
+                if (notesField.value) {
+                    notesField.value += ' ' + text;
+                } else {
+                    notesField.value = text;
+                }
+                
+                notesField.focus();
+            });
+        });
+        
+        // Form submission
+        document.getElementById('dictationForm').addEventListener('submit', 
+function(e) {
+            e.preventDefault();
+            
+            // Validate at least one procedure selected
+            const procedures = 
+document.querySelectorAll('input[name="procedures[]"]:checked');
+            if (procedures.length === 0) {
+                showAlert('error', 'Please select at least one procedure');
+                return;
+            }
+            
+            generateDictation();
+        });
+        
+        function generateDictation() {
+            const formData = new 
+FormData(document.getElementById('dictationForm'));
+            const template = formData.get('template');
+            
+            let dictationText = '';
+            
+            // Header
+            dictationText += `PROCEDURE DICTATION\n`;
+            dictationText += `==================\n\n`;
+            
+            // Patient Information
+            dictationText += `PATIENT: ${formData.get('patientName')}\n`;
+            dictationText += `DATE OF SERVICE: 
+${formatDate(formData.get('dos'))}\n`;
+            dictationText += `LOCATION: ${formData.get('location')}\n`;
+            dictationText += `PROVIDER: ${formData.get('provider')}\n\n`;
+            
+            // Procedures
+            const procedures = 
+Array.from(document.querySelectorAll('input[name="procedures[]"]:checked'))
+                .map(cb => cb.value);
+            
+            dictationText += `PROCEDURES PERFORMED:\n`;
+            procedures.forEach(proc => {
+                dictationText += `• ${proc}\n`;
+            });
+            dictationText += '\n';
+            
+            // Template-specific content
+            if (template === 'injection') {
+                dictationText += generateInjectionTemplate(procedures, 
+formData.get('notes'));
+            } else if (template === 'followup') {
+                dictationText += generateFollowupTemplate(procedures, 
+formData.get('notes'));
+            } else if (template === 'initial') {
+                dictationText += generateInitialTemplate(procedures, 
+formData.get('notes'));
+            } else if (template === 'procedure') {
+                dictationText += generateProcedureTemplate(procedures, 
+formData.get('notes'));
+            }
+            
+            // Display dictation
+            document.getElementById('dictationContent').textContent = 
+dictationText;
+            document.getElementById('dictationOutput').style.display = 'block';
+            document.getElementById('dictationActions').style.display = 'flex';
+            
+            // Apply watermark if enabled
+            if (document.getElementById('addWatermark').checked) {
+                document.getElementById('watermark').style.display = 'block';
+            }
+            
+            // Scroll to output
+            document.getElementById('dictationOutput').scrollIntoView({ 
+behavior: 'smooth' });
+        }
+        
+        function generateInjectionTemplate(procedures, notes) {
+            let template = `INDICATION:\nChronic pain syndrome\n\n`;
+            template += `CONSENT:\nRisks, benefits, and alternatives discussed. 
+Written consent obtained.\n\n`;
+            template += `TECHNIQUE:\n`;
+            template += `After obtaining informed consent, the patient was 
+placed in the appropriate position. `;
+            template += `The area was prepped and draped in sterile fashion. 
+Local anesthetic was infiltrated. `;
+            template += `Under fluoroscopic guidance, the procedure was 
+performed as follows:\n\n`;
+            
+            // Add procedure-specific details
+            procedures.forEach(proc => {
+                if (proc.includes('Epidural')) {
+                    template += `For the ${proc}: The epidural space was 
+accessed using loss of resistance technique. `;
+                    template += `Contrast was injected confirming appropriate 
+spread. Medication was then injected.\n\n`;
+                } else if (proc.includes('Facet')) {
+                    template += `For the ${proc}: The facet joint was 
+identified under fluoroscopy. `;
+                    template += `Needle placement was confirmed with contrast. 
+Medication was injected.\n\n`;
+                }
+            });
+            
+            template += `MEDICATIONS:\n`;
+            template += `• Lidocaine 1%\n`;
+            template += `• Dexamethasone 10mg\n`;
+            template += `• Normal saline\n\n`;
+            
+            template += `COMPLICATIONS:\nNone\n\n`;
+            
+            if (notes) {
+                template += `ADDITIONAL NOTES:\n${notes}\n\n`;
+            }
+            
+            template += `DISPOSITION:\nPatient tolerated the procedure well and 
+was discharged in stable condition.\n\n`;
+            template += `FOLLOW-UP:\nReturn to clinic in 2-4 weeks.`;
+            
+            return template;
+        }
+        
+        function generateFollowupTemplate(procedures, notes) {
+            let template = `CHIEF COMPLAINT:\nFollow-up visit for chronic pain 
+management\n\n`;
+            template += `INTERVAL HISTORY:\nPatient returns for scheduled 
+follow-up.\n\n`;
+            template += `CURRENT MEDICATIONS:\n[To be completed]\n\n`;
+            template += `ASSESSMENT:\n${notes || '[Assessment to be 
+completed]'}\n\n`;
+            template += `PLAN:\nContinue current treatment regimen. Follow-up 
+in 4-6 weeks.`;
+            return template;
+        }
+        
+        function generateInitialTemplate(procedures, notes) {
+            let template = `CHIEF COMPLAINT:\n[To be completed]\n\n`;
+            template += `HISTORY OF PRESENT ILLNESS:\n[To be completed]\n\n`;
+            template += `PAST MEDICAL HISTORY:\n[To be completed]\n\n`;
+            template += `MEDICATIONS:\n[To be completed]\n\n`;
+            template += `PHYSICAL EXAMINATION:\n[To be completed]\n\n`;
+            template += `ASSESSMENT AND PLAN:\n${notes || '[To be 
+completed]'}`;
+            return template;
+        }
+        
+        function generateProcedureTemplate(procedures, notes) {
+            let template = `PROCEDURE DETAILS:\n${notes || '[To be 
+completed]'}\n\n`;
+            template += `TECHNIQUE:\n[To be completed]\n\n`;
+            template += `FINDINGS:\n[To be completed]\n\n`;
+            template += `COMPLICATIONS:\nNone\n\n`;
+            template += `DISPOSITION:\nStable`;
+            return template;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        function copyDictation() {
+            const dictationText = 
+document.getElementById('dictationContent').textContent;
+            let textToCopy = dictationText;
+            
+            // Add confidentiality notice if enabled
+            if (document.getElementById('addNotice').checked) {
+                textToCopy = `[CONFIDENTIAL MEDICAL INFORMATION - DO NOT 
+DISTRIBUTE]\n\n${dictationText}\n\n[This document contains protected health 
+information. Unauthorized disclosure is prohibited.]`;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const notification = 
+document.getElementById('copyNotification');
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            });
+        }
+        
+        function printDictation() {
+            window.print();
+            
+            // Clear form if auto-clear is enabled
+            if (document.getElementById('autoClear').checked) {
+                setTimeout(() => {
+                    clearForm();
+                    document.getElementById('dictationOutput').style.display = 
+'none';
+                    document.getElementById('dictationActions').style.display = 
+'none';
+                    showAlert('info', 'Form cleared for privacy protection');
+                }, 1000);
+            }
+        }
+        
+        function newDictation() {
+            clearForm();
+            document.getElementById('dictationOutput').style.display = 'none';
+            document.getElementById('dictationActions').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+        
+        function clearForm() {
+            document.getElementById('dictationForm').reset();
+            // Set date back to today
+            document.getElementById('dos').value = new 
+Date().toISOString().split('T')[0];
+            // Clear all checkboxes
+            
+document.querySelectorAll('input[type="checkbox"][name="procedures[]"]').forEach(cb 
+=> {
+                cb.checked = false;
+            });
+        }
+        
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+        
+        // Auto-save draft
+        let autoSaveInterval = setInterval(() => {
+            const formData = new 
+FormData(document.getElementById('dictationForm'));
+            const draft = {
+                patientName: formData.get('patientName'),
+                dos: formData.get('dos'),
+                template: formData.get('template'),
+                procedures: 
+Array.from(document.querySelectorAll('input[name="procedures[]"]:checked')).map(cb 
+=> cb.value),
+                location: formData.get('location'),
+                notes: formData.get('notes'),
+                provider: formData.get('provider')
+            };
+            
+            localStorage.setItem('dictationDraft', JSON.stringify(draft));
+        }, 30000); // Save every 30 seconds
+        
+        // Load draft if exists
+        window.addEventListener('load', () => {
+            const draft = localStorage.getItem('dictationDraft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                if (confirm('A draft was found. Would you like to restore 
+it?')) {
+                    document.getElementById('patientName').value = 
+data.patientName || '';
+                    document.getElementById('dos').value = data.dos || '';
+                    document.getElementById('template').value = data.template 
+|| '';
+                    document.getElementById('location').value = data.location 
+|| '';
+                    document.getElementById('notes').value = data.notes || '';
+                    document.getElementById('provider').value = data.provider 
+|| '';
+                    
+                    // Restore procedures
+                    data.procedures.forEach(proc => {
+                        const checkbox = 
+document.querySelector(`input[value="${proc}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            }
+        });
+        
+        // Clear draft on successful generation
+        document.getElementById('dictationForm').addEventListener('submit', () 
+=> {
+            localStorage.removeItem('dictationDraft');
+        });
+    </script>
+</body>
+</html>
