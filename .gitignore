@@ -1,21 +1,43 @@
-# Sensitive files
+# GMPM Project .gitignore
+
+# Sensitive files and credentials
 .env
 *.env
+.env.backup.*
 .git-credentials
 *.pem
 *.key
+
+# Personal/sensitive dotfiles
+.bash_history
+.mysql_history
+.lesshst
+.lastlogin
+
+# Server-specific configuration files
+.bashrc
+.bash_profile
+.bash_logout
+.imunify_patch_id
+.myimunify_id
+.wp-toolkit-identifier
+.spamassassin*
+
+# Application logs and caches
 *.log
 *.bak
 *.swp
+storage/logs/*
+storage/cache/*
+storage/sessions/*
 
-# Common dependency and runtime folders
+# Dependencies and build artifacts
 vendor/
 node_modules/
-storage/
 tmp/
 temp_restore/
 
-# Server/user-specific config dirs
+# Server/hosting-specific directories
 .cache/
 .cagefs/
 .caldav/
@@ -25,23 +47,45 @@ temp_restore/
 .gnupg/
 .local/
 .sitepad/
-.spamassassin/
 .softaculous/
 .trash/
 mail/
 ssl/
 
-# SSH keys and config
+# SSH keys (keep .gitconfig but ignore sensitive keys)
 .ssh/
-.ssh/id_ed25519
+*.pub
+yes
+yes.pub
 
-# cPanel and symlinked paths to ignore
+# Symlinked paths and aliases
 www/
 gmpm-new/
 access-logs/
-public_html/  # <-- ignore symlink if present
 
-# Allow real ~/public_html contents even if above line matches a symlink
-!public_html
-!public_html/**
+# Keep .htpasswds (needed for HTTP Basic Auth)
+!.htpasswds/
+!.htpasswds/**
 
+# Keep .gitconfig (useful for development)
+!.gitconfig
+
+# Application-specific ignores
+public_html/error_log
+app/storage/logs/*.log
+backups/
+cookies.txt
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
