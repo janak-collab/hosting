@@ -11,3 +11,4 @@ storage/
 *.key
 *.env
 
+.git-credentials
