@@ -1,18 +1,22 @@
 #!/bin/bash
 
-# Set your project root directory (replace if needed)
-REPO_DIR="$HOME"
+# 🏁 Automatically sync project to GitHub
 
-# Change to project root
-cd "$REPO_DIR" || { echo "❌ Failed to enter repo root: $REPO_DIR"; exit 1; }
+# Use dynamic project root (instead of assuming $HOME)
+REPO_DIR="$(git rev-parse --show-toplevel 2>/dev/null)"
 
-# Optional: check if it's a Git repo
-if [ ! -d ".git" ]; then
-  echo "❌ This is not a Git repository: $REPO_DIR"
+if [ -z "$REPO_DIR" ]; then
+  echo "❌ Not inside a Git repository."
   exit 1
 fi
 
-# Stage all changes except ignored ones
+# Move to repo root
+cd "$REPO_DIR" || {
+  echo "❌ Failed to cd into Git repo at: $REPO_DIR"
+  exit 1
+}
+
+# Stage all changes, respecting .gitignore
 git add -A
 
 # Commit with timestamp
