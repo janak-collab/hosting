@@ -1,17 +1,26 @@
 #!/bin/bash
 
-# Navigate to your project root (adjust path if needed)
-cd ~ || {
-  echo "❌ Failed to enter project directory"
+# Use the user's home directory as Git repo root
+REPO_ROOT="$HOME"
+
+# Path to symlinked directory (e.g., public_html)
+TARGET_SYMLINK="$REPO_ROOT/public_html"
+
+# Resolve real path of the symlink
+REAL_TARGET=$(readlink -f "$TARGET_SYMLINK")
+
+# Move to Git repo root
+cd "$REPO_ROOT" || {
+  echo "❌ Failed to enter repo root: $REPO_ROOT"
   exit 1
 }
 
-echo "🔄 Starting sync to GitHub..."
+echo "🔄 Syncing Git repository from: $REAL_TARGET"
 
-# Stage all changes, including new and deleted files
+# Stage all changes
 git add -A
 
-# Only commit if something actually changed
+# Commit only if there are staged changes
 if ! git diff --cached --quiet; then
   TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
   git commit -m "Auto-sync on $TIMESTAMP"

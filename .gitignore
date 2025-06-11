@@ -23,6 +23,7 @@ temp_restore/
 .config/
 .cpanel/
 .gnupg/
+.local/
 .sitepad/
 .spamassassin/
 .softaculous/
@@ -33,3 +34,8 @@ ssl/
 # SSH keys and config
 .ssh/
 .ssh/id_ed25519
+
+# Misc
+www/
+gmpm-new/
+access-logs/
