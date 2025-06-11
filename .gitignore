@@ -185,3 +185,4 @@ package-lock.json
 yarn.lock
 .ssh/
 **/.ssh/
+.cache/
