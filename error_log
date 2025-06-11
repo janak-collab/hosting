@@ -140,3 +140,5 @@ Stack trace:
     [user_role] => admin
 )
 
+[11-Jun-2025 18:06:39 UTC] PHP Parse error:  Unterminated comment starting line 2 in /home/gmpmus/public_html/index.php on line 2
+[11-Jun-2025 18:07:54 UTC] PHP Parse error:  Unterminated comment starting line 2 in /home/gmpmus/public_html/index.php on line 2

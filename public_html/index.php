@@ -1,11 +1,10 @@
 <?php
 /**
- * GMPM Application Entry Point - Full Featured Version with FastRoute
-    case $requestUri === '/dictation':
-        require APP_PATH . '/public-endpoints/dictation.php';
-        break;
-        
- */
+ * GMPM Application Entry Point - FastRoute Implementation
+ * 
+ * This application uses FastRoute for modern routing.
+ * All routes are defined in /app/src/Router.php
+*/ 
 
 // Define paths
 define('ROOT_PATH', dirname(__DIR__));
