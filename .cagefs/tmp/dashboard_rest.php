@@ -1,0 +1,323 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMPM Portal - Greater Maryland Pain Management</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>GMPM Portal</h1>
+                <span>Greater Maryland Pain Management</span>
+            </div>
+            
+            <div class="user-info">
+                <div class="search-container">
+                    <span>🔍</span>
+                    <input type="text" class="search-input" placeholder="Search patient, form, or provider...">
+                </div>
+                
+                <div class="user-profile">
+                    <span>Welcome, <?php echo htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'User'); ?><?php if ($isAdmin): ?> <span class="admin-badge">Admin</span><?php endif; ?></span>
+                    <div class="user-avatar">
+                        <?php 
+                        $username = $_SERVER['PHP_AUTH_USER'] ?? 'U';
+                        echo strtoupper(substr($username, 0, 1));
+                        ?>
+                    </div>
+                    <?php if ($isAdmin): ?>
+                    <a href="/admin/logout" class="logout-btn">Logout Admin</a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Statistics Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="todayAppointments"><?php echo $stats['appointments'] ?? '0'; ?></div>
+                <div class="stat-label">Today\'s Appointments</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="pendingForms"><?php echo $stats['pending_forms'] ?? '0'; ?></div>
+                <div class="stat-label">Pending Forms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="newPatients"><?php echo $stats['new_patients'] ?? '0'; ?></div>
+                <div class="stat-label">New Patients</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="scheduledProcedures"><?php echo $stats['procedures'] ?? '0'; ?></div>
+                <div class="stat-label">Procedures Scheduled</div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="/phone-note" class="quick-btn">
+                    <span>📞</span>
+                    <span>New Phone Note</span>
+                </a>
+                <a href="/forms/new-patient" class="quick-btn">
+                    <span>👤</span>
+                    <span>New Patient</span>
+                </a>
+                <a href="/forms/checkout" class="quick-btn">
+                    <span>✓</span>
+                    <span>Patient Checkout</span>
+                </a>
+                <a href="/forms/work-note" class="quick-btn">
+                    <span>📄</span>
+                    <span>Work Note</span>
+                </a>
+                <a href="/admin/tickets" class="quick-btn secondary">
+                    <span>📋</span>
+                    <span>View IT Tickets</span>
+                </a>
+                <a href="/it-support" class="quick-btn secondary">
+                    <span>💻</span>
+                    <span>IT Support</span>
+                </a>
+               <a href="/dictation" class="quick-btn">
+                    <span>📝</span>
+                    <span>Dictation</span>
+               </a>
+               <?php if ($isAdmin): ?>
+               <a href="/admin/phone-notes" class="quick-btn admin-only">
+                    <span>📋</span>
+                    <span>All Phone Notes</span>
+               </a>
+               <a href="/secure-admin/ip-manager.php" class="quick-btn admin-only">
+                    <span>🔒</span>
+                    <span>IP Manager</span>
+               </a>
+               <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Patient Services -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">👥</span>
+                    <h3>Patient Services</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/forms/new-patient" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>New Patient Registration</span>
+                        <span class="badge">Quick</span>
+                    </a>
+                    <a href="/forms/patient" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Patient Forms Library</span>
+                    </a>
+                    <a href="/forms/consent" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Consent Forms</span>
+                    </a>
+                    <a href="/forms/family-release" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Family/HIPAA Release</span>
+                    </a>
+                    <a href="/billing/receipt" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Payment Receipts</span>
+                    </a>
+                    <a href="/forms/discharge" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Patient Discharge</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Clinical Operations -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">⚕️</span>
+                    <h3>Clinical Operations</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/dictation" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Dictation System</span>
+                        <span class="badge">New</span>
+                    </a>
+                    <a href="/forms/injections" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Injection Documentation</span>
+                    </a>
+                    <a href="/forms/procedures" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Procedure Notes</span>
+                    </a>
+                    <a href="/forms/radiology" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Radiology Requests</span>
+                    </a>
+                    <a href="/forms/lab-orders" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Lab Orders (LFT, UDS)</span>
+                    </a>
+                    <a href="/forms/dme" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>DME Orders</span>
+                    </a>
+                    <a href="/forms/treatments" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Treatment Forms</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Referral Management -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">🔄</span>
+                    <h3>Referral Management</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/forms/referral" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Create New Referral</span>
+                    </a>
+                    <a href="/forms/pt-referral" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Physical Therapy</span>
+                    </a>
+                    <a href="/forms/specialist" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Specialist Referrals</span>
+                    </a>
+                    <a href="/forms/fce" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>FCE Requests</span>
+                    </a>
+                    <a href="/forms/work-disability" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Work/Disability Notes</span>
+                    </a>
+                    <a href="/forms/lmn" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Letters of Medical Necessity</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Surgery Center -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">🏥</span>
+                    <h3>Surgery Center</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/forms/surgery-scheduling" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Schedule Procedure</span>
+                    </a>
+                    <a href="/forms/pre-op" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Pre-Op Packets</span>
+                    </a>
+                    <a href="/forms/h-and-p" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>H&P Forms</span>
+                    </a>
+                    <a href="/forms/procedure-specific" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Procedure-Specific Forms</span>
+                    </a>
+                    <a href="/forms/post-op" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Post-Op Surveys</span>
+                    </a>
+                    <a href="/forms/ama" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>AMA Forms</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Billing & Admin -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">💰</span>
+                    <h3>Billing & Administration</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/billing/abn" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Medicare ABN</span>
+                    </a>
+                    <a href="/billing/cash-prices" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Cash Price Lists</span>
+                    </a>
+                    <a href="/billing/hardship" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Financial Hardship</span>
+                    </a>
+                    <a href="/billing/invoice" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Generate Invoice</span>
+                    </a>
+                    <a href="/admin/employee" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Employee Forms</span>
+                    </a>
+                    <a href="/admin/compliance" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Compliance Documents</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Resources -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-icon">📚</span>
+                    <h3>Resources</h3>
+                </div>
+                <div class="section-links">
+                    <a href="/resources/education" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Patient Education</span>
+                    </a>
+                    <a href="/resources/hep" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Home Exercise Programs</span>
+                    </a>
+                    <a href="/resources/marketing" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Marketing Materials</span>
+                    </a>
+                    <a href="/resources/provider-schedule" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Provider Schedules</span>
+                    </a>
+                    <a href="/resources/training" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>Training Resources</span>
+                    </a>
+                    <a href="/resources/it-help" class="section-link">
+                        <span class="link-icon">→</span>
+                        <span>IT Support Guides</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/assets/js/dashboard.js"></script>
+</body>
+</html>

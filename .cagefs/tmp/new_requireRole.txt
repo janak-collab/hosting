@@ -1,0 +1,51 @@
+    public function requireRole($minRole) {
+        // First try to authenticate via HTTP Basic Auth if not already authenticated
+        if (!isset($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+            $username = $_SERVER['PHP_AUTH_USER'] ?? null;
+            if ($username) {
+                // Auto-authenticate HTTP Basic Auth users
+                $db = Connection::getInstance()->getConnection();
+                $stmt = $db->prepare("SELECT * FROM users WHERE username = :username AND is_active = 1");
+                $stmt->execute(['username' => $username]);
+                $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
+                
+                if ($userData) {
+                    // Set up session
+                    $_SESSION['authenticated'] = true;
+                    $_SESSION['user_id'] = $userData['id'];
+                    $_SESSION['username'] = $userData['username'];
+                    $_SESSION['user_role'] = $userData['role'];
+                    $_SESSION['is_user'] = true;
+                    $_SESSION['is_admin'] = in_array($userData['role'], ['admin', 'super_admin']);
+                    $_SESSION['is_super_admin'] = $userData['role'] === 'super_admin';
+                    
+                    // For backward compatibility
+                    if ($_SESSION['is_admin']) {
+                        $_SESSION['admin_logged_in'] = true;
+                        $_SESSION['admin_username'] = $userData['username'];
+                    }
+                }
+            }
+        }
+        
+        // Now check if authenticated
+        if (!isset($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+            header('Location: /login');
+            exit;
+        }
+
+        $roleHierarchy = [
+            'user' => 1,
+            'admin' => 2,
+            'super_admin' => 3
+        ];
+
+        $userRole = $_SESSION['user_role'] ?? 'user';
+        $userLevel = $roleHierarchy[$userRole] ?? 1;
+        $requiredLevel = $roleHierarchy[$minRole] ?? 1;
+
+        if ($userLevel < $requiredLevel) {
+            header('HTTP/1.1 403 Forbidden');
+            die('Access denied. Insufficient permissions.');
+        }
+    }

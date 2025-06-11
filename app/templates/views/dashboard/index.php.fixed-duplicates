@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMPM Portal - Greater Maryland Pain Management</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>🏥 Greater Maryland Pain Management</h1>
+                <p>Internal Portal System</p>
+            </div>
+            <div class="user-info">
+                <span>Welcome, <?php echo htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'User'); ?>!</span>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="/admin" class="admin-link">🔧 Admin</a>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="dashboard-card">
+            <h2>Quick Actions</h2>
+            <div class="quick-actions">
+                <a href="/phone-note" class="quick-btn primary">
+                    <span>📞</span>
+                    <span>Phone Note</span>
+                </a>
+                <a href="/it-support" class="quick-btn">
+                    <span>💻</span>
+                    <span>IT Support</span>
+                </a>
+                <a href="/dictation" class="quick-btn">
+                    <span>🎙️</span>
+                    <span>Dictation</span>
+                </a>
+                <a href="/referral-tracking" class="quick-btn">
+                    <span>🔄</span>
+                    <span>Referrals</span>
+                </a>
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a href="/secure-admin/ip-manager.php" class="quick-btn admin">
+                        <span>🔒</span>
+                        <span>IP Manager</span>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Clinical Section -->
+        <div class="dashboard-card">
+            <h2>📋 Clinical</h2>
+            <div class="section-links">
+                <a href="/phone-note" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Phone Notes</span>
+                    <span class="badge">Daily</span>
+                </a>
+                <a href="/dictation" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Voice Dictation</span>
+                    <span class="badge">New</span>
+                </a>
+                <a href="/patient-forms" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Patient Forms</span>
+                </a>
+                <a href="/prescription-refills" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Prescription Refills</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Administrative Section -->
+        <div class="dashboard-card">
+            <h2>🏢 Administrative</h2>
+            <div class="section-links">
+                <a href="/referral-tracking" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Referral Tracking</span>
+                    <span class="badge">Important</span>
+                </a>
+                <a href="/insurance-verification" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Insurance Verification</span>
+                </a>
+                <a href="/scheduling" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Scheduling System</span>
+                </a>
+                <a href="/billing" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Billing Management</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Support & Management Section -->
+        <div class="dashboard-card">
+            <h2>🛠️ Support & Management</h2>
+            <div class="section-links">
+                <a href="/it-support" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>IT Support Tickets</span>
+                </a>
+                <a href="/admin/tickets" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>View All Tickets</span>
+                </a>
+                <a href="/admin/phone-notes" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>All Phone Notes</span>
+                </a>
+                <a href="/reports" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div class="dashboard-card">
+            <h2>🔗 Quick Links</h2>
+            <div class="section-links">
+                <a href="/directory" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Staff Directory</span>
+                </a>
+                <a href="/locations" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Office Locations</span>
+                </a>
+                <a href="/help" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>Help & Documentation</span>
+                </a>
+                <a href="/profile" class="section-link">
+                    <span class="link-icon">→</span>
+                    <span>My Profile</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-card">
+            <h2>📊 Recent Activity</h2>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-icon">📞</span>
+                    <span class="activity-text">Phone notes created today</span>
+                    <span class="activity-count">0</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">🎙️</span>
+                    <span class="activity-text">Dictations completed</span>
+                    <span class="activity-count">0</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">💻</span>
+                    <span class="activity-text">Open IT tickets</span>
+                    <span class="activity-count">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Greater Maryland Pain Management - Internal Portal</p>
+            <p>Need help? <a href="/it-support">Submit IT Ticket</a> | <a href="/help">Documentation</a></p>
+        </div>
+    </div>
+</body>
+</html>

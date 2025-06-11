@@ -1,0 +1,102 @@
+--- 
+files: 
+  certificate: 
+    autodiscover_gmpm_us_c20be_01c87_1756339096_4fb27f1cdb6ee83eec500432902ea7bc: 
+      created: '1748566607'
+      domains: 
+        - autodiscover.gmpm.us
+        - cpanel.gmpm.us
+        - cpcalendars.gmpm.us
+        - cpcontacts.gmpm.us
+        - gmpm.us
+        - mail.gmpm.us
+        - webdisk.gmpm.us
+        - webmail.gmpm.us
+        - www.gmpm.us
+      ecdsa_curve_name: ~
+      ecdsa_public: ~
+      friendly_name: Cert for “gmpm.us” 1748566607.0
+      id: autodiscover_gmpm_us_c20be_01c87_1756339096_4fb27f1cdb6ee83eec500432902ea7bc
+      is_self_signed: 0
+      issuer.commonName: R10
+      issuer.organizationName: Let's Encrypt
+      key_algorithm: rsaEncryption
+      modulus: c20be0f126003e124e82cc3c57779b2983d78925b056d6d87085f6987527217d57c539f3fe6a187faa60a05a94df31263dcb6d21e398166c8f4127fb62c56c201b2cb48c97e8777434357f64358c5bc5c57493a8da63b8594f39ca9a4b25b3fc5b1e60f64dd730cae0e6537f5327482d9f3f082a2d3234d5b5060b989954958e796faa5e067bb46de7a330689849f121bf0940a99491f00cb8bcb1ada48348b06c8e4d4dc96cb935e7df792c8ea9d26453d0d6b3387a6189e92f3384925921e74c454e1c6fe437a307a4ccd9d1a09420ceb3d16631d4d25af34869d94e37a86ee705bf4080ac41342c612b072910da0595d4e9519496195c132bbdb99dd01c87
+      modulus_length: 2048
+      not_after: '1756339096'
+      not_before: '1748563097'
+      serial: 06ad6215f062d4a5befca49b72e65eba2368
+      signature_algorithm: sha256WithRSAEncryption
+      subject.commonName: autodiscover.gmpm.us
+      validation_type: dv
+    gmpm_us_e3f15_796b1_1779935686_8d7485d6b957ab82913305ed43f2a7f7: 
+      created: '1748399686'
+      domains: 
+        - gmpm.us
+        - mail.gmpm.us
+        - www.gmpm.us
+        - cpanel.gmpm.us
+        - webmail.gmpm.us
+        - webdisk.gmpm.us
+        - cpcontacts.gmpm.us
+        - cpcalendars.gmpm.us
+        - autodiscover.gmpm.us
+      ecdsa_curve_name: ~
+      ecdsa_public: ~
+      friendly_name: Cert for “gmpm.us”
+      id: gmpm_us_e3f15_796b1_1779935686_8d7485d6b957ab82913305ed43f2a7f7
+      is_self_signed: 1
+      issuer.commonName: gmpm.us
+      issuer.organizationName: ~
+      key_algorithm: rsaEncryption
+      modulus: e3f15b0fbcbf2a521065389aa904373c944a2601bfa7302d959603455e215fcb9cdc1fc921925d607007f2673e613d453074e54f674d694c92ec6486399e0dd8542e71edefba35e4889344f7b4b0e06a0b2e81da60016e7167c89e7262cfe19168ad350503a157297932d1e5c831961a678093ceda7c13a2fd54e11c893990cb42ace833674f63bddb74bd0194c394ebf205b78a80e5989b748e1cb49a863087b8b97b21a66d451e4bf6858e10113f65b3b2f3d8130fed846442968c091d9fdf3cbf12afea7ef1c4b566408cdc2f904b0e7fc8f9b446d17d0300c7953f13c4a99feb07da68dca713be389e00cfb0ffa2d0e593975613814110cd22169be796b1
+      modulus_length: 2048
+      not_after: '1779935686'
+      not_before: '1748399686'
+      serial: bba7ea85
+      signature_algorithm: sha256WithRSAEncryption
+      subject.commonName: gmpm.us
+      validation_type: ~
+  key: 
+    c20be_01c87_ca023ec4f9bcd249281f391f1b67f664: 
+      created: '1748566607'
+      ecdsa_curve_name: ~
+      ecdsa_public: ~
+      friendly_name: Key for “gmpm.us” 1748566607.0
+      id: c20be_01c87_ca023ec4f9bcd249281f391f1b67f664
+      key_algorithm: rsaEncryption
+      modulus: c20be0f126003e124e82cc3c57779b2983d78925b056d6d87085f6987527217d57c539f3fe6a187faa60a05a94df31263dcb6d21e398166c8f4127fb62c56c201b2cb48c97e8777434357f64358c5bc5c57493a8da63b8594f39ca9a4b25b3fc5b1e60f64dd730cae0e6537f5327482d9f3f082a2d3234d5b5060b989954958e796faa5e067bb46de7a330689849f121bf0940a99491f00cb8bcb1ada48348b06c8e4d4dc96cb935e7df792c8ea9d26453d0d6b3387a6189e92f3384925921e74c454e1c6fe437a307a4ccd9d1a09420ceb3d16631d4d25af34869d94e37a86ee705bf4080ac41342c612b072910da0595d4e9519496195c132bbdb99dd01c87
+      modulus_length: 2048
+    e3f15_796b1_632f0f3ce87ec28926b44ed01c3ac310: 
+      created: '1748399686'
+      ecdsa_curve_name: ~
+      ecdsa_public: ~
+      friendly_name: Key for “gmpm.us”
+      id: e3f15_796b1_632f0f3ce87ec28926b44ed01c3ac310
+      key_algorithm: rsaEncryption
+      modulus: e3f15b0fbcbf2a521065389aa904373c944a2601bfa7302d959603455e215fcb9cdc1fc921925d607007f2673e613d453074e54f674d694c92ec6486399e0dd8542e71edefba35e4889344f7b4b0e06a0b2e81da60016e7167c89e7262cfe19168ad350503a157297932d1e5c831961a678093ceda7c13a2fd54e11c893990cb42ace833674f63bddb74bd0194c394ebf205b78a80e5989b748e1cb49a863087b8b97b21a66d451e4bf6858e10113f65b3b2f3d8130fed846442968c091d9fdf3cbf12afea7ef1c4b566408cdc2f904b0e7fc8f9b446d17d0300c7953f13c4a99feb07da68dca713be389e00cfb0ffa2d0e593975613814110cd22169be796b1
+      modulus_length: 2048
+indexes: 
+  certificate: 
+    modulus: 
+      c20be0f126003e124e82cc3c57779b2983d78925b056d6d87085f6987527217d57c539f3fe6a187faa60a05a94df31263dcb6d21e398166c8f4127fb62c56c201b2cb48c97e8777434357f64358c5bc5c57493a8da63b8594f39ca9a4b25b3fc5b1e60f64dd730cae0e6537f5327482d9f3f082a2d3234d5b5060b989954958e796faa5e067bb46de7a330689849f121bf0940a99491f00cb8bcb1ada48348b06c8e4d4dc96cb935e7df792c8ea9d26453d0d6b3387a6189e92f3384925921e74c454e1c6fe437a307a4ccd9d1a09420ceb3d16631d4d25af34869d94e37a86ee705bf4080ac41342c612b072910da0595d4e9519496195c132bbdb99dd01c87: 
+        autodiscover_gmpm_us_c20be_01c87_1756339096_4fb27f1cdb6ee83eec500432902ea7bc: ~
+      e3f15b0fbcbf2a521065389aa904373c944a2601bfa7302d959603455e215fcb9cdc1fc921925d607007f2673e613d453074e54f674d694c92ec6486399e0dd8542e71edefba35e4889344f7b4b0e06a0b2e81da60016e7167c89e7262cfe19168ad350503a157297932d1e5c831961a678093ceda7c13a2fd54e11c893990cb42ace833674f63bddb74bd0194c394ebf205b78a80e5989b748e1cb49a863087b8b97b21a66d451e4bf6858e10113f65b3b2f3d8130fed846442968c091d9fdf3cbf12afea7ef1c4b566408cdc2f904b0e7fc8f9b446d17d0300c7953f13c4a99feb07da68dca713be389e00cfb0ffa2d0e593975613814110cd22169be796b1: 
+        gmpm_us_e3f15_796b1_1779935686_8d7485d6b957ab82913305ed43f2a7f7: ~
+    subject.commonName: 
+      autodiscover.gmpm.us: 
+        autodiscover_gmpm_us_c20be_01c87_1756339096_4fb27f1cdb6ee83eec500432902ea7bc: ~
+      gmpm.us: 
+        gmpm_us_e3f15_796b1_1779935686_8d7485d6b957ab82913305ed43f2a7f7: ~
+uniques: 
+  certificate: 
+    friendly_name: 
+      Cert for “gmpm.us”: gmpm_us_e3f15_796b1_1779935686_8d7485d6b957ab82913305ed43f2a7f7
+      Cert for “gmpm.us” 1748566607.0: autodiscover_gmpm_us_c20be_01c87_1756339096_4fb27f1cdb6ee83eec500432902ea7bc
+  key: 
+    friendly_name: 
+      Key for “gmpm.us”: e3f15_796b1_632f0f3ce87ec28926b44ed01c3ac310
+      Key for “gmpm.us” 1748566607.0: c20be_01c87_ca023ec4f9bcd249281f391f1b67f664
+    modulus:ecdsa_curve_name:ecdsa_public: 
+      c20be0f126003e124e82cc3c57779b2983d78925b056d6d87085f6987527217d57c539f3fe6a187faa60a05a94df31263dcb6d21e398166c8f4127fb62c56c201b2cb48c97e8777434357f64358c5bc5c57493a8da63b8594f39ca9a4b25b3fc5b1e60f64dd730cae0e6537f5327482d9f3f082a2d3234d5b5060b989954958e796faa5e067bb46de7a330689849f121bf0940a99491f00cb8bcb1ada48348b06c8e4d4dc96cb935e7df792c8ea9d26453d0d6b3387a6189e92f3384925921e74c454e1c6fe437a307a4ccd9d1a09420ceb3d16631d4d25af34869d94e37a86ee705bf4080ac41342c612b072910da0595d4e9519496195c132bbdb99dd01c87: c20be_01c87_ca023ec4f9bcd249281f391f1b67f664
+      e3f15b0fbcbf2a521065389aa904373c944a2601bfa7302d959603455e215fcb9cdc1fc921925d607007f2673e613d453074e54f674d694c92ec6486399e0dd8542e71edefba35e4889344f7b4b0e06a0b2e81da60016e7167c89e7262cfe19168ad350503a157297932d1e5c831961a678093ceda7c13a2fd54e11c893990cb42ace833674f63bddb74bd0194c394ebf205b78a80e5989b748e1cb49a863087b8b97b21a66d451e4bf6858e10113f65b3b2f3d8130fed846442968c091d9fdf3cbf12afea7ef1c4b566408cdc2f904b0e7fc8f9b446d17d0300c7953f13c4a99feb07da68dca713be389e00cfb0ffa2d0e593975613814110cd22169be796b1: e3f15_796b1_632f0f3ce87ec28926b44ed01c3ac310

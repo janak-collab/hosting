@@ -1,0 +1,142 @@
+[05-Jun-2025 23:17:07 America/New_York] PHP Fatal error:  Uncaught Error: Non-static method App\Services\Logger::info() cannot be called statically in /home/gmpmus/test-logging-cli.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/test-logging-cli.php on line 9
+[06-Jun-2025 21:05:06 UTC] PHP Parse error:  syntax error, unexpected token "extends", expecting "{" in /home/gmpmus/app/src/Controllers/PhoneNoteController.php on line 6
+[06-Jun-2025 21:07:01 UTC] PHP Parse error:  syntax error, unexpected token "extends", expecting "{" in /home/gmpmus/app/src/Controllers/PhoneNoteController.php on line 6
+[06-Jun-2025 21:11:12 UTC] PHP Parse error:  syntax error, unexpected token "\", expecting variable in /home/gmpmus/app/src/Services/Logger.php on line 153
+[06-Jun-2025 21:11:12 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Models/PhoneNote.php on line 142
+[06-Jun-2025 21:19:38 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Models/PhoneNote.php on line 142
+[06-Jun-2025 21:20:22 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Models/PhoneNote.php on line 141
+[06-Jun-2025 21:20:37 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Models/PhoneNote.php on line 141
+[06-Jun-2025 21:21:14 UTC] PHP Parse error:  Unclosed '{' on line 9 in /home/gmpmus/app/src/Models/PhoneNote.php on line 139
+[06-Jun-2025 21:22:46 UTC] PHP Parse error:  Unmatched '}' in /home/gmpmus/app/src/Models/PhoneNote.php on line 140
+[06-Jun-2025 21:23:09 UTC] PHP Parse error:  Unmatched '}' in /home/gmpmus/app/src/Models/PhoneNote.php on line 140
+[06-Jun-2025 21:45:44 UTC] PHP Parse error:  Unmatched '}' in /home/gmpmus/app/src/Core/Router.php on line 303
+[06-Jun-2025 17:46:10 America/New_York] GMPM Router: Total routes registered: 1
+[06-Jun-2025 17:46:10 America/New_York] GMPM Router: Checking route GET /test against GET /test
+[06-Jun-2025 17:46:10 America/New_York] GMPM Router: Route matched! Calling handleRoute
+[06-Jun-2025 17:46:10 America/New_York] GMPM Router: handleRoute called for path: /test
+[06-Jun-2025 17:46:10 America/New_York] GMPM Router: callHandler called with handler type: object
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: Total routes registered: 1
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: Checking route GET /test against GET /test
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: Route matched! Calling handleRoute
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: handleRoute called for path: /test
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: callHandler called with handler type: object
+[06-Jun-2025 17:46:45 America/New_York] GMPM Router: Calling closure handler
+[06-Jun-2025 17:47:28 America/New_York] GMPM Routes: Loading web routes file
+[06-Jun-2025 17:47:28 America/New_York] GMPM Routes: Phone-note route registered
+[06-Jun-2025 21:51:59 UTC] PHP Warning:  Undefined variable $controller in /tmp/fix_router_method.php on line 73
+[06-Jun-2025 21:51:59 UTC] PHP Fatal error:  Uncaught TypeError: get_class(): Argument #1 ($object) must be of type object, null given in /tmp/fix_router_method.php:73
+Stack trace:
+#0 {main}
+  thrown in /tmp/fix_router_method.php on line 73
+[06-Jun-2025 18:55:41 America/New_York] [2025-06-06 18:55:41] app.INFO: Application bootstrapped
+
+[06-Jun-2025 18:55:41 America/New_York] [2025-06-06 18:55:41] test.INFO: Test message from CLI
+
+[06-Jun-2025 18:56:28 America/New_York] [2025-06-06 18:56:28] app.INFO: Application bootstrapped
+
+[06-Jun-2025 18:56:28 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined method App\Core\Router::matchRoute() in Command line code:18
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 18
+[06-Jun-2025 18:56:54 America/New_York] [2025-06-06 18:56:54] app.INFO: Application bootstrapped
+
+[06-Jun-2025 18:56:54 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined method App\Core\Router::getRoutes() in Command line code:18
+Stack trace:
+#0 {main}
+  thrown in Command line code on line 18
+[06-Jun-2025 18:57:30 America/New_York] [2025-06-06 18:57:30] app.INFO: Application bootstrapped
+
+[06-Jun-2025 18:57:30 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined method App\Core\Router::getRoutes() in /home/gmpmus/test-router.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/test-router.php on line 13
+[06-Jun-2025 21:32:18 America/New_York] PHP Parse error:  syntax error, unexpected token "catch", expecting "function" or "const" in /home/gmpmus/app/src/Services/EmailService.php on line 40
+[06-Jun-2025 21:34:41 America/New_York] General email error: SMTP Error: The following recipients failed: test@gmpm.us: No Such User Here
+
+[06-Jun-2025 21:35:41 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/gmpmus/test-it-support-complete.php:9) in /home/gmpmus/app/src/Controllers/ITSupportController.php on line 57
+[06-Jun-2025 21:36:44 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/gmpmus/test-it-clean.php:9) in /home/gmpmus/app/src/Controllers/ITSupportController.php on line 57
+[09-Jun-2025 01:54:57 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "App\APP_PATH" in /home/gmpmus/app/src/RouterCache.php:25
+Stack trace:
+#0 /home/gmpmus/app/clear-route-cache.php(3): App\RouterCache::clear()
+#1 {main}
+  thrown in /home/gmpmus/app/src/RouterCache.php on line 25
+[10-Jun-2025 08:55:04 America/New_York] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function App\Services\UserService::createUser(), 1 passed in /tmp/test_create_user.php on line 37 and at least 2 expected in /home/gmpmus/app/src/Services/UserService.php:21
+Stack trace:
+#0 /tmp/test_create_user.php(37): App\Services\UserService->createUser(Array)
+#1 {main}
+  thrown in /home/gmpmus/app/src/Services/UserService.php on line 21
+[10-Jun-2025 08:58:11 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/gmpmus/public_html/test-create-with-session.php:12) in /home/gmpmus/app/src/Controllers/UserManagementController.php on line 95
+[10-Jun-2025 09:11:13 America/New_York] PHP Warning:  Undefined array key "USER" in /tmp/check_session.php on line 12
+[10-Jun-2025 09:11:13 America/New_York] PHP Warning:  Undefined array key "PASS" in /tmp/check_session.php on line 12
+[10-Jun-2025 09:11:51 America/New_York] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /tmp/debug_store_method.php on line 6
+[10-Jun-2025 09:11:51 America/New_York] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function App\Services\UserService::createUser(), 1 passed in /tmp/debug_store_method.php on line 46 and at least 2 expected in /home/gmpmus/app/src/Services/UserService.php:21
+Stack trace:
+#0 /tmp/debug_store_method.php(46): App\Services\UserService->createUser(Array)
+#1 {main}
+  thrown in /home/gmpmus/app/src/Services/UserService.php on line 21
+[10-Jun-2025 13:12:08 UTC] PHP Fatal error:  Cannot redeclare header() in /tmp/debug_store.php on line 39
+[10-Jun-2025 13:31:32 UTC] PHP Warning:  require_once(../../app/vendor/autoload.php): Failed to open stream: No such file or directory in /home/gmpmus/public_html/api/public/test-form-submission.php on line 2
+[10-Jun-2025 13:31:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../app/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/gmpmus/public_html/api/public/test-form-submission.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/public_html/api/public/test-form-submission.php on line 2
+[10-Jun-2025 13:32:07 UTC] PHP Warning:  require_once(../../app/vendor/autoload.php): Failed to open stream: No such file or directory in /home/gmpmus/public_html/api/public/test-form-submission.php on line 2
+[10-Jun-2025 13:32:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '../../app/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/gmpmus/public_html/api/public/test-form-submission.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/public_html/api/public/test-form-submission.php on line 2
+[10-Jun-2025 10:16:55 America/New_York] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 10:17:26 America/New_York] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 10:17:52 America/New_York] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 14:17:56 UTC] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 14:18:02 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/gmpmus/app/src/bootstrap.php on line 18
+[10-Jun-2025 10:18:02 America/New_York] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 14:18:34 UTC] PHP Parse error:  syntax error, unexpected token "if", expecting "function" or "const" in /home/gmpmus/app/src/Services/UserService.php on line 177
+[10-Jun-2025 14:18:47 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/gmpmus/app/src/bootstrap.php on line 18
+[10-Jun-2025 10:18:47 America/New_York] PHP Warning:  Undefined array key "DB_NAME" in /home/gmpmus/app/src/Database/Connection.php on line 14
+[10-Jun-2025 10:18:48 America/New_York] PHP Warning:  Undefined array key "DB_NAME" in /home/gmpmus/app/src/Database/Connection.php on line 14
+[10-Jun-2025 10:41:21 America/New_York] PHP Warning:  Undefined array key "DB_NAME" in /home/gmpmus/app/src/Database/Connection.php on line 14
+[10-Jun-2025 10:41:21 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[3D000]: Invalid catalog name: 1046 No database selected in /home/gmpmus/app/src/Models/User.php:37
+Stack trace:
+#0 /home/gmpmus/app/src/Models/User.php(37): PDOStatement->execute(Array)
+#1 Command line code(6): App\Models\User->getAllUsers()
+#2 {main}
+  thrown in /home/gmpmus/app/src/Models/User.php on line 37
+[10-Jun-2025 10:41:31 America/New_York] PHP Warning:  Undefined array key "DB_NAME" in /home/gmpmus/app/src/Database/Connection.php on line 14
+[10-Jun-2025 10:41:31 America/New_York] PHP Fatal error:  Uncaught PDOException: SQLSTATE[3D000]: Invalid catalog name: 1046 No database selected in /home/gmpmus/app/src/Models/User.php:37
+Stack trace:
+#0 /home/gmpmus/app/src/Models/User.php(37): PDOStatement->execute(Array)
+#1 Command line code(6): App\Models\User->getAllUsers()
+#2 {main}
+  thrown in /home/gmpmus/app/src/Models/User.php on line 37
+[10-Jun-2025 10:41:59 America/New_York] PHP Warning:  Undefined array key "DB_NAME" in /home/gmpmus/app/src/Database/Connection.php on line 14
+[10-Jun-2025 14:44:18 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/gmpmus/app/src/bootstrap.php on line 18
+[10-Jun-2025 14:45:33 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/gmpmus/app/src/bootstrap.php on line 18
+[10-Jun-2025 10:48:28 America/New_York] === AUTH DEBUG ===
+[10-Jun-2025 10:48:28 America/New_York] Attempting login for user: admin
+[10-Jun-2025 10:48:28 America/New_York] Password verified successfully
+[10-Jun-2025 10:48:28 America/New_York] Session created successfully
+[10-Jun-2025 10:48:28 America/New_York] Session data: Array
+(
+    [admin_logged_in] => 1
+    [admin_username] => admin
+    [user_id] => 16
+    [user_role] => admin
+)
+
+[10-Jun-2025 10:49:10 America/New_York] === AUTH DEBUG ===
+[10-Jun-2025 10:49:10 America/New_York] Attempting login for user: admin
+[10-Jun-2025 10:49:10 America/New_York] Password verified successfully
+[10-Jun-2025 10:49:10 America/New_York] PHP Warning:  session_regenerate_id(): Session ID cannot be regenerated after headers have already been sent in /home/gmpmus/app/src/Services/AuthService.php on line 53
+[10-Jun-2025 10:49:10 America/New_York] Session created successfully
+[10-Jun-2025 10:49:10 America/New_York] Session data: Array
+(
+    [admin_logged_in] => 1
+    [admin_username] => admin
+    [user_id] => 16
+    [user_role] => admin
+)
+

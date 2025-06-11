@@ -1,0 +1,44 @@
+GMPM PORTAL v2.0 - QUICK REFERENCE
+==================================
+
+URLS:
+-----
+Portal Home:     https://gmpm.us/
+Status Page:     https://gmpm.us/status
+Health Check:    https://gmpm.us/health
+Phone Note:      https://gmpm.us/phone-note
+IT Support:      https://gmpm.us/it-support
+Admin Login:     https://gmpm.us/admin/login
+
+COMMANDS:
+---------
+Check Status:    ~/bin/check-gmpm
+View Routes:     php ~/app/route-list.php
+System Info:     php ~/app/dashboard-final.php
+View Logs:       tail -f ~/logs/php_errors.log
+
+FILE LOCATIONS:
+---------------
+App Root:        ~/app/
+Public Root:     ~/public_html/
+Controllers:     ~/app/src/Controllers/
+Templates:       ~/app/templates/
+Config:          ~/app/.env
+
+MAINTENANCE:
+------------
+Clear Cache:     rm -rf ~/app/storage/cache/*
+Check Errors:    grep -i error ~/logs/php_errors.log | tail -20
+Restart App:     touch ~/public_html/.htaccess
+
+DATABASE:
+---------
+Name:            gmpmus_portal
+User:            gmpmus_user
+Host:            localhost
+
+SUPPORT:
+--------
+Created by:      Your Development Team
+Last Updated:    2025-06-07
+Version:         2.0.0

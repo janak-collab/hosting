@@ -1,0 +1,44 @@
+GMPM QUICK REFERENCE
+====================
+
+URLS:
+-----
+Main Portal:    https://gmpm.us/
+Phone Notes:    https://gmpm.us/phone-note
+IT Support:     https://gmpm.us/it-support
+Admin Panel:    https://gmpm.us/admin/login
+Status Check:   https://gmpm.us/status.php
+
+ADMIN LOGIN:
+------------
+Username: admin
+Password: admin123
+
+ALLOWED IPS:
+------------
+98.233.204.84  - Catonsville
+173.67.39.5    - Edgewater
+68.134.39.4    - Elkridge
+71.244.156.161 - Glen Burnie
+68.134.31.125  - Home
+24.245.103.202 - Leonardtown
+72.81.228.74   - Odenton
+73.39.186.209  - Prince Frederick
+
+KEY PATHS:
+----------
+App Root:    /home/gmpmus/app/
+Public Root: /home/gmpmus/public_html/
+Logs:        /home/gmpmus/app/storage/logs/
+Config:      /home/gmpmus/app/.env
+
+TROUBLESHOOTING:
+----------------
+1. Check logs: tail -f /home/gmpmus/app/storage/logs/app.log
+2. Check access: tail -f /home/gmpmus/public_html/error_log
+3. Test DB: php /home/gmpmus/app/scripts/check-db.php
+4. Clear session: rm -rf /home/gmpmus/app/storage/sessions/*
+
+SUPPORT:
+--------
+Submit ticket at: https://gmpm.us/it-support

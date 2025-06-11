@@ -1,0 +1,163 @@
+<?php
+namespace App\Services;
+
+use Monolog\Logger as MonologLogger;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
+
+class Logger {
+    private static $instances = [];
+    private $logger;
+    private $channel;
+    
+    private function __construct($channel) {
+        $this->channel = $channel;
+        $this->logger = new MonologLogger($channel);
+        
+        // Set up handlers based on channel
+        $this->setupHandlers();
+    }
+    
+    public static function channel($channel = 'app') {
+        if (!isset(self::$instances[$channel])) {
+            self::$instances[$channel] = new self($channel);
+        }
+        return self::$instances[$channel];
+    }
+    
+    private function setupHandlers() {
+        $logPath = STORAGE_PATH . '/logs/';
+        
+        // Ensure log directory exists
+        if (!is_dir($logPath)) {
+            mkdir($logPath, 0755, true);
+        }
+        
+        // Common formatter
+        $formatter = new LineFormatter(
+            "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
+            'Y-m-d H:i:s',
+            true,
+            true
+        );
+        
+        switch ($this->channel) {
+            case 'access':
+                $handler = new RotatingFileHandler($logPath . 'access.log', 30, MonologLogger::INFO);
+                break;
+                
+            case 'security':
+                $handler = new RotatingFileHandler($logPath . 'security.log', 90, MonologLogger::WARNING);
+                break;
+                
+            case 'sql':
+                $handler = new RotatingFileHandler($logPath . 'sql.log', 7, MonologLogger::DEBUG);
+                break;
+                
+            case 'mail':
+                $handler = new RotatingFileHandler($logPath . 'mail.log', 30, MonologLogger::INFO);
+                break;
+                
+            case 'error':
+                $handler = new RotatingFileHandler($logPath . 'error.log', 60, MonologLogger::ERROR);
+                break;
+                
+            default:
+                $handler = new RotatingFileHandler($logPath . 'app.log', 30, MonologLogger::DEBUG);
+        }
+        
+        $handler->setFormatter($formatter);
+        $this->logger->pushHandler($handler);
+        
+        // Add error handler for all channels in production
+        if (($_ENV['APP_ENV'] ?? 'production') === 'production' && $this->channel !== 'error') {
+            $errorHandler = new StreamHandler($logPath . 'error.log', MonologLogger::ERROR);
+            $errorHandler->setFormatter($formatter);
+            $this->logger->pushHandler($errorHandler);
+        }
+    }
+    
+    // Logging methods
+    public function debug($message, array $context = []) {
+        $this->logger->debug($message, $this->addContext($context));
+    }
+    
+    public function info($message, array $context = []) {
+        $this->logger->info($message, $this->addContext($context));
+    }
+    
+    public function notice($message, array $context = []) {
+        $this->logger->notice($message, $this->addContext($context));
+    }
+    
+    public function warning($message, array $context = []) {
+        $this->logger->warning($message, $this->addContext($context));
+    }
+    
+    public function error($message, array $context = []) {
+        $this->logger->error($message, $this->addContext($context));
+    }
+    
+    public function critical($message, array $context = []) {
+        $this->logger->critical($message, $this->addContext($context));
+    }
+    
+    public function alert($message, array $context = []) {
+        $this->logger->alert($message, $this->addContext($context));
+    }
+    
+    public function emergency($message, array $context = []) {
+        $this->logger->emergency($message, $this->addContext($context));
+    }
+    
+    // Add common context
+    private function addContext(array $context) {
+        // Add common context data
+        $context['ip'] = $_SERVER['REMOTE_ADDR'] ?? 'CLI';
+        $context['user'] = $_SESSION['user_id'] ?? $_SERVER['PHP_AUTH_USER'] ?? 'anonymous';
+        
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $context['uri'] = $_SERVER['REQUEST_URI'];
+        }
+        
+        return $context;
+    }
+    
+    // Specialized logging methods - STATIC methods for direct access
+    public static function logAccess($action, array $data = []) {
+        self::channel('access')->info($action, $data);
+    }
+    
+    public static function logSecurity($event, array $data = []) {
+        self::channel('security')->warning($event, $data);
+    }
+    
+    public static function logSql($query, array $bindings = [], $time = null) {
+        if (($_ENV['APP_DEBUG'] ?? false) || ($_ENV['LOG_SQL'] ?? false)) {
+            $data = ['query' => $query, 'bindings' => $bindings];
+            if ($time !== null) {
+                $data['execution_time'] = $time . 'ms';
+            }
+            self::channel('sql')->debug('SQL Query', $data);
+        }
+    }
+    
+    public static function logMail($to, $subject, $status = 'sent', array $data = []) {
+        $data['to'] = $to;
+        $data['subject'] = $subject;
+        $data['status'] = $status;
+        self::channel('mail')->info('Email ' . $status, $data);
+    }
+    
+    public static function logException(\ExceptionThrowable $e, array $context = []) {
+        $context['exception'] = [
+            'class' => get_class($e),
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ];
+        self::channel('error')->error('Exception caught', $context);
+    }
+}

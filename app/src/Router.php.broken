@@ -1,0 +1,322 @@
+<?php
+namespace App;
+
+use FastRoute\RouteCollector;
+use function FastRoute\simpleDispatcher;
+
+class Router {
+    private $dispatcher;
+    private $middleware = [];
+
+    public function __construct() {
+        $this->dispatcher = simpleDispatcher(function(RouteCollector $r) {
+            // 
+====================================================================
+            // Public Routes (No authentication required)
+            // 
+====================================================================
+            
+            // Portal and Status
+            $r->addRoute('GET', '/', 'PortalController@index');
+            $r->addRoute('GET', '/status', 'StatusController@check');
+            
+            // User ticket viewing (uses HTTP Basic Auth)
+            $r->addRoute('GET', '/view-tickets', 
+'PortalController@viewTickets');
+            
+            // 
+====================================================================
+            // Phone Note Routes
+            // 
+====================================================================
+            
+            // Phone note form
+            $r->addRoute('GET', '/phone-note', 'PhoneNoteController@showForm');
+            
+            // Phone note API endpoints
+            $r->addRoute('POST', '/api/phone-notes/submit', 
+'PhoneNoteController@submit');
+            $r->addRoute('POST', '/api/phone-notes/status/{id:\d+}', 
+'PhoneNoteController@updateStatus');
+            
+            // 
+====================================================================
+            // IT Support Routes
+            // 
+====================================================================
+            
+            // IT support form
+            $r->addRoute('GET', '/it-support', 'ITSupportController@showForm');
+            
+            // IT support API endpoints
+            $r->addRoute('POST', '/api/it-support/submit', 
+'ITSupportController@handleSubmission');
+            
+            // 
+====================================================================
+            // Admin Routes (Requires admin authentication)
+            // 
+====================================================================
+            
+            $r->addGroup('/admin', function (RouteCollector $r) {
+                // Admin dashboard/index
+                $r->addRoute('GET', '', 'AdminController@index');
+                $r->addRoute('GET', '/', 'AdminController@index');
+                $r->addRoute('GET', '/dashboard', 'AdminController@dashboard');
+                
+                // Authentication
+                $r->addRoute('GET', '/login', 'AdminController@showLogin');
+                $r->addRoute('POST', '/login', 'AdminController@handleLogin');
+                $r->addRoute('GET', '/logout', 'AdminController@logout');
+                $r->addRoute('POST', '/logout', 'AdminController@logout');
+                
+                // IT Support Ticket Management
+                $r->addRoute('GET', '/tickets', 
+'ITSupportController@showAdminPanel');
+                $r->addRoute('POST', '/tickets/update', 
+'ITSupportController@updateTicket');
+                $r->addRoute('GET', '/tickets/{id:\d+}', 
+'ITSupportController@viewTicket');
+                $r->addRoute('POST', '/tickets/{id:\d+}/comment', 
+'ITSupportController@addComment');
+                
+                // Phone Note Management
+                $r->addRoute('GET', '/phone-notes', 
+'PhoneNoteController@listNotes');
+                $r->addRoute('GET', '/phone-notes/view/{id:\d+}', 
+'PhoneNoteController@viewNote');
+                $r->addRoute('GET', '/phone-notes/print/{id:\d+}', 
+'PhoneNoteController@printNote');
+                $r->addRoute('GET', '/phone-notes/pdf/{id:\d+}', 
+'PhoneNoteController@generatePDF');
+                $r->addRoute('POST', '/phone-notes/{id:\d+}/status', 
+'PhoneNoteController@updateStatus');
+                
+                // User Management (future implementation)
+                $r->addGroup('/users', function (RouteCollector $r) {
+                    $r->addRoute('GET', '', 'UserController@index');
+                    $r->addRoute('GET', '/create', 'UserController@create');
+                    $r->addRoute('POST', '/store', 'UserController@store');
+                    $r->addRoute('GET', '/{id:\d+}/edit', 
+'UserController@edit');
+                    $r->addRoute('POST', '/{id:\d+}/update', 
+'UserController@update');
+                    $r->addRoute('POST', '/{id:\d+}/delete', 
+'UserController@delete');
+                });
+                
+                // IP Management
+                $r->addRoute('GET', '/ip-manager', 
+'IpManagerController@index');
+                $r->addRoute('POST', '/ip-manager/update', 
+'IpManagerController@update');
+                
+                // System logs (future implementation)
+                $r->addRoute('GET', '/logs', 'LogController@index');
+                $r->addRoute('GET', '/logs/{type}', 'LogController@show');
+            });
+            
+            // 
+====================================================================
+            // API Routes (for future REST API implementation)
+            // 
+====================================================================
+            
+            $r->addGroup('/api', function (RouteCollector $r) {
+                // Public API endpoints (no auth required)
+                $r->addGroup('/public', function (RouteCollector $r) {
+                    $r->addRoute('GET', '/status', 'ApiController@status');
+                    $r->addRoute('GET', '/health', 'ApiController@health');
+                });
+                
+                // Authenticated API endpoints
+                $r->addGroup('/v1', function (RouteCollector $r) {
+                    // Tickets API
+                    $r->addRoute('GET', '/tickets', 
+'ApiController@getTickets');
+                    $r->addRoute('GET', '/tickets/{id:\d+}', 
+'ApiController@getTicket');
+                    $r->addRoute('POST', '/tickets', 
+'ApiController@createTicket');
+                    $r->addRoute('PUT', '/tickets/{id:\d+}', 
+'ApiController@updateTicket');
+                    
+                    // Phone Notes API
+                    $r->addRoute('GET', '/phone-notes', 
+'ApiController@getPhoneNotes');
+                    $r->addRoute('GET', '/phone-notes/{id:\d+}', 
+'ApiController@getPhoneNote');
+                    $r->addRoute('POST', '/phone-notes', 
+'ApiController@createPhoneNote');
+                    $r->addRoute('PUT', '/phone-notes/{id:\d+}', 
+'ApiController@updatePhoneNote');
+                });
+            });
+        });
+    }
+
+    /**
+     * Dispatch the request to the appropriate controller
+     *
+     * @param string $httpMethod
+     * @param string $uri
+     * @return void
+     */
+    public function dispatch($httpMethod, $uri) {
+        // Log the request for debugging (remove in production)
+        error_log("Router dispatching: {$httpMethod} {$uri}");
+        
+        $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
+
+        switch ($routeInfo[0]) {
+            case \FastRoute\Dispatcher::NOT_FOUND:
+                $this->handleNotFound();
+                break;
+
+            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+                $this->handleMethodNotAllowed($routeInfo[1]);
+                break;
+
+            case \FastRoute\Dispatcher::FOUND:
+                $this->handleFound($routeInfo[1], $routeInfo[2]);
+                break;
+        }
+    }
+
+    /**
+     * Handle 404 Not Found
+     */
+    private function handleNotFound() {
+        http_response_code(404);
+        
+        // Check if it's an API request
+        if (strpos($_SERVER['REQUEST_URI'], '/api/') === 0) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => 'Not Found',
+                'message' => 'The requested endpoint does not exist',
+                'status' => 404
+            ]);
+            return;
+        }
+        
+        // Regular 404 page
+        $errorFile = PUBLIC_PATH . '/errors/404.html';
+        if (file_exists($errorFile)) {
+            include $errorFile;
+        } else {
+            echo '404 - Page Not Found';
+        }
+    }
+
+    /**
+     * Handle 405 Method Not Allowed
+     */
+    private function handleMethodNotAllowed($allowedMethods) {
+        http_response_code(405);
+        header('Allow: ' . implode(', ', $allowedMethods));
+        
+        // Check if it's an API request
+        if (strpos($_SERVER['REQUEST_URI'], '/api/') === 0) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'error' => 'Method Not Allowed',
+                'message' => 'The request method is not allowed for this 
+endpoint',
+                'allowed_methods' => $allowedMethods,
+                'status' => 405
+            ]);
+            return;
+        }
+        
+        echo '405 - Method Not Allowed. Allowed methods: ' . implode(', ', 
+$allowedMethods);
+    }
+
+    /**
+     * Handle successful route match
+     */
+    private function handleFound($handler, $vars) {
+        // Parse controller and method
+        if (strpos($handler, '@') === false) {
+            http_response_code(500);
+            echo "Invalid handler format: {$handler}";
+            return;
+        }
+        
+        list($controller, $method) = explode('@', $handler);
+        $controllerClass = "\\App\\Controllers\\{$controller}";
+
+        // Check if controller exists
+        if (!class_exists($controllerClass)) {
+            error_log("Controller not found: {$controllerClass}");
+            http_response_code(500);
+            echo "Controller not found: {$controller}";
+            return;
+        }
+
+        // Check if method exists
+        $instance = new $controllerClass();
+        if (!method_exists($instance, $method)) {
+            error_log("Method not found: {$controllerClass}@{$method}");
+            http_response_code(500);
+            echo "Method not found: {$controller}@{$method}";
+            return;
+        }
+
+        // Apply route-specific middleware
+        if ($this->shouldApplyAdminMiddleware($_SERVER['REQUEST_URI'])) {
+            $adminAuth = new \App\Middleware\AdminAuth();
+            $request = ['uri' => $_SERVER['REQUEST_URI']];
+            $next = function($request) use ($instance, $method, $vars) {
+                call_user_func_array([$instance, $method], $vars);
+            };
+            $adminAuth->handle($request, $next);
+            return;
+        }
+
+        // Execute the controller method
+        call_user_func_array([$instance, $method], $vars);
+    }
+
+    /**
+     * Check if admin middleware should be applied
+     */
+    private function shouldApplyAdminMiddleware($uri) {
+        // Admin routes that require authentication
+        $protectedPaths = [
+            '/admin/tickets',
+            '/admin/phone-notes',
+            '/admin/users',
+            '/admin/ip-manager',
+            '/admin/logs',
+            '/admin/dashboard'
+        ];
+        
+        // Skip middleware for login page
+        if ($uri === '/admin/login' || $uri === '/admin/logout') {
+            return false;
+        }
+        
+        // Check if URI starts with any protected path
+        foreach ($protectedPaths as $path) {
+            if (strpos($uri, $path) === 0) {
+                return true;
+            }
+        }
+        
+        // Check if it's the admin index
+        if ($uri === '/admin' || $uri === '/admin/') {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Get all registered routes (useful for debugging)
+     */
+    public function getRoutes() {
+        return $this->dispatcher->getData();
+    }
+}

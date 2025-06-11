@@ -1,0 +1,1 @@
+*/5 * * * * /home/gmpmus/deploy.sh >> /home/gmpmus/deploy.log 2>&1

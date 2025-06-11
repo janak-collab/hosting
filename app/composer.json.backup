@@ -1,0 +1,19 @@
+{
+    "name": "gmpm/website",
+    "description": "Greater Maryland Pain Management Website",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "vlucas/phpdotenv": "^5.4",
+        "phpmailer/phpmailer": "^6.6",
+        "monolog/monolog": "^2.8",
+        "ext-pdo": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        },
+        "files": ["src/Helpers/functions.php"]
+    }
+}

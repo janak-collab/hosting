@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User - Greater Maryland Pain Management</title>
+    <link rel="stylesheet" href="/assets/css/form-styles.css">
+    <style>
+        .password-strength {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: calc(var(--radius) * 0.5);
+            font-size: 0.875rem;
+        }
+        
+        .password-strength.weak {
+            background: #fee;
+            color: var(--error-color);
+        }
+        
+        .password-strength.medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .password-strength.strong {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .password-requirements {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        
+        .requirement.met {
+            color: var(--success-color);
+        }
+        
+        .requirement-icon {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .username-check {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .username-check.available {
+            color: var(--success-color);
+        }
+        
+        .username-check.unavailable {
+            color: var(--error-color);
+        }
+        
+        .role-option {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .role-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .role-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        
+        .role-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(242, 101, 34, 0.05);
+        }
+        
+        .role-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            margin-left: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>➕ Create New User</h1>
+                <p>Add a new user to the system</p>
+            </div>
+            
+            <div class="form-content">
+                                
+                
+                <form method="POST" action="/admin/users/store" id="createUserForm">
+                    <input type="hidden" name="csrf_token" value="722ba0434fc50f51d8f1ba2345d51a4dd7bd51f8262c6e19d864426ce60e1541">
+                    
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="username" class="form-label">
+                            Username <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            class="form-input"
+                            value=""
+                            required
+                            maxlength="50"
+                            pattern="[a-zA-Z0-9_-]+"
+                            title="Username can only contain letters, numbers, underscores, and hyphens"
+                        >
+                        <div id="usernameCheck" class="username-check"></div>
+                        <div class="form-error" id="usernameError"></div>
+                    </div>
+                    
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="full_name" class="form-label">
+                            Full Name <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="full_name" 
+                            name="full_name" 
+                            class="form-input"
+                            value=""
+                            required
+                            maxlength="100"
+                        >
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input"
+                            value=""
+                            maxlength="255"
+                        >
+                        <small class="form-help">Optional - used for password recovery and notifications</small>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">
+                            Password <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input"
+                            required
+                            minlength="12"
+                        >
+                        <div id="passwordStrength" class="password-strength" style="display: none;"></div>
+                        <div class="password-requirements">
+                            <div class="requirement" id="req-length">
+                                <span class="requirement-icon">❌</span>
+                                At least 12 characters
+                            </div>
+                            <div class="requirement" id="req-uppercase">
+                                <span class="requirement-icon">❌</span>
+                                One uppercase letter
+                            </div>
+                            <div class="requirement" id="req-lowercase">
+                                <span class="requirement-icon">❌</span>
+                                One lowercase letter
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <span class="requirement-icon">❌</span>
+                                One number
+                            </div>
+                            <div class="requirement" id="req-special">
+                                <span class="requirement-icon">❌</span>
+                                One special character
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">
+                            Confirm Password <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="confirm_password" 
+                            name="confirm_password" 
+                            class="form-input"
+                            required
+                            minlength="12"
+                        >
+                        <div class="form-error" id="confirmError"></div>
+                    </div>
+                    
+                    <!-- Role -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Role <span class="required">*</span>
+                        </label>
+                        <div class="role-options">
+                            <div class="role-option" onclick="selectRole(this, 'user')">
+                                <label>
+                                    <input type="radio" name="role" value="user" checked>
+                                    <strong>User</strong>
+                                </label>
+                                <div class="role-description">
+                                    Basic access to forms and dashboard. Can submit forms and view own submissions.
+                                </div>
+                            </div>
+                            
+                            <div class="role-option" onclick="selectRole(this, 'admin')">
+                                <label>
+                                    <input type="radio" name="role" value="admin">
+                                    <strong>Admin</strong>
+                                </label>
+                                <div class="role-description">
+                                    Manage tickets, phone notes, and view reports. Cannot manage users or system settings.
+                                </div>
+                            </div>
+                            
+                            <div class="role-option" onclick="selectRole(this, 'super_admin')">
+                                <label>
+                                    <input type="radio" name="role" value="super_admin">
+                                    <strong>Super Admin</strong>
+                                </label>
+                                <div class="role-description">
+                                    Full system access including user management, provider management, and system configuration.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Status -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" checked>
+                            Active Account
+                        </label>
+                        <small class="form-help">Inactive users cannot log in</small>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label for="notes" class="form-label">
+                            Notes
+                        </label>
+                        <textarea 
+                            id="notes" 
+                            name="notes" 
+                            class="form-textarea"
+                            rows="3"
+                            maxlength="500"
+                        ></textarea>
+                        <small class="form-help">Optional - internal notes about this user</small>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="form-actions">
+                        <a href="/admin/users" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            Create User
+                        </button>
+                    </div>
+                </form>
+                
+                            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2025 Greater Maryland Pain Management</p>
+        </div>
+    </div>
+    
+    <script src="/assets/js/user-management.js"></script>
+    <script src="/assets/js/user-management.js"></script>
+</body>
+</html>

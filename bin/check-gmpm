@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "GMPM Quick Status Check"
+echo "======================"
+echo -n "Portal: "
+curl -s -o /dev/null -w "%{http_code}" https://gmpm.us/ && echo " ✓" || echo " ✗"
+echo -n "API Status: "
+curl -s https://gmpm.us/status | jq -r .status 2>/dev/null || echo "Error"
+echo -n "PHP Errors: "
+tail -1 ~/logs/php_errors.log | grep -q "error" && echo "Found" || echo "None recent"

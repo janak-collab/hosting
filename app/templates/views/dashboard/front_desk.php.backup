@@ -1,0 +1,32 @@
+<?php $this->extend('dashboard/base') ?>
+
+<?php $this->section('content') ?>
+<div class="dashboard-content">
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <h2>Quick Actions</h2>
+        <div class="action-grid">
+            <?php foreach ($quickActions as $action): ?>
+            <a href="<?= $action['url'] ?>" class="action-card" style="border-color: <?= $action['color'] ?>">
+                <div class="action-icon"><?= $action['icon'] ?></div>
+                <div class="action-title"><?= $action['title'] ?></div>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </section>
+    
+    <!-- Main Sections -->
+    <div class="dashboard-sections">
+        <?php foreach ($sections as $section): ?>
+        <section class="dashboard-section">
+            <h3><?= $section['title'] ?></h3>
+            <ul class="section-links">
+                <?php foreach ($section['items'] as $item): ?>
+                <li><a href="<?= $item['url'] ?>"><?= $item['name'] ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php $this->endSection() ?>

@@ -1,0 +1,110 @@
+#!/bin/bash
+# Update bootstrap.php with all necessary constants
+
+echo "Updating bootstrap.php..."
+
+# Backup current bootstrap
+cp app/src/bootstrap.php app/src/bootstrap.php.backup
+
+# Create new bootstrap.php
+cat > app/src/bootstrap.php << 'EOF'
+<?php
+// GMPM Application Bootstrap
+
+// Define all paths
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(dirname(__DIR__)));
+}
+if (!defined('APP_PATH')) {
+    define('APP_PATH', BASE_PATH . '/app');
+}
+if (!defined('PUBLIC_PATH')) {
+    define('PUBLIC_PATH', BASE_PATH . '/public_html');
+}
+if (!defined('STORAGE_PATH')) {
+    define('STORAGE_PATH', APP_PATH . '/storage');
+}
+if (!defined('CONFIG_PATH')) {
+    define('CONFIG_PATH', APP_PATH . '/config');
+}
+if (!defined('RESOURCE_PATH')) {
+    define('RESOURCE_PATH', APP_PATH . '/resources');
+}
+
+// Load composer autoloader
+require_once APP_PATH . '/vendor/autoload.php';
+
+// Load environment variables
+if (file_exists(APP_PATH . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(APP_PATH);
+    $dotenv->load();
+}
+
+// Database configuration
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
+define('DB_NAME', $_ENV['DB_NAME'] ?? '');
+define('DB_USER', $_ENV['DB_USER'] ?? '');
+define('DB_PASS', $_ENV['DB_PASSWORD'] ?? '');
+
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    // Session configuration
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.gc_maxlifetime', 7200); // 2 hours
+    
+    session_start();
+}
+
+// Set timezone
+date_default_timezone_set('America/New_York');
+
+// Error reporting based on environment
+if (($_ENV['APP_ENV'] ?? 'production') === 'development') {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+} else {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+}
+
+// Load helper functions
+require_once APP_PATH . '/src/Helpers/functions.php';
+EOF
+
+echo "Bootstrap updated!"
+
+# Also fix the flash function in helpers
+echo ""
+echo "Updating flash function in helpers..."
+sed -i 's/return $this->redirect($url)->with/redirect_with($url,/' app/src/Controllers/AdminController.php 2>/dev/null || true
+
+# Update AdminController to handle flash messages correctly
+echo ""
+echo "Fixing AdminController redirect methods..."
+cat > app/src/Controllers/AdminController.fix << 'EOF'
+    public function login() {
+        if (!$this->validateCsrf()) {
+            $_SESSION['flash_message'] = 'Invalid security token';
+            $_SESSION['flash_type'] = 'error';
+            return $this->redirect('/admin/login');
+        }
+        
+        $username = $this->input('username');
+        $password = $this->input('password');
+        
+        if ($this->authService->authenticate($username, $password)) {
+            return $this->redirect('/admin');
+        }
+        
+        $_SESSION['flash_message'] = 'Invalid credentials';
+        $_SESSION['flash_type'] = 'error';
+        return $this->redirect('/admin/login');
+    }
+EOF
+
+echo ""
+echo "Bootstrap and related files updated!"
+echo ""
+echo "Now run the diagnostic script to check for issues."

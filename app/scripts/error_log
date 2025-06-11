@@ -1,0 +1,13 @@
+[06-Jun-2025 16:39:47 America/New_York] PHP Fatal error:  Uncaught Error: Non-static method App\Services\Logger::logException() cannot be called statically in /home/gmpmus/app/src/bootstrap.php:31
+Stack trace:
+#0 [internal function]: {closure}(Object(Error))
+#1 {main}
+  thrown in /home/gmpmus/app/src/bootstrap.php on line 31
+[09-Jun-2025 02:18:16 UTC] PHP Warning:  require_once(/home/gmpmus/app/scripts/vendor/autoload.php): Failed to open stream: No such file or directory in /home/gmpmus/app/scripts/create-admin.php on line 2
+[09-Jun-2025 02:18:16 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/gmpmus/app/scripts/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/gmpmus/app/scripts/create-admin.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/scripts/create-admin.php on line 2
+[09-Jun-2025 02:20:52 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/gmpmus/app/scripts/test-session.php on line 14
+[08-Jun-2025 22:21:18 America/New_York] PHP Warning:  session_regenerate_id(): Session ID cannot be regenerated after headers have already been sent in /home/gmpmus/app/src/Services/AuthService.php on line 28
+[08-Jun-2025 22:27:59 America/New_York] PHP Warning:  session_regenerate_id(): Session ID cannot be regenerated after headers have already been sent in /home/gmpmus/app/src/Services/AuthService.php on line 28

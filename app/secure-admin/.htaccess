@@ -1,0 +1,75 @@
+# ============================================================================
+# GMPM Admin Area Protection - LiteSpeed Compatible
+# Location: /secure-admin/.htaccess
+# ============================================================================
+
+# Basic authentication (works on both Apache and LiteSpeed)
+AuthType Basic
+AuthName "GMPM Admin Area - Authorized Personnel Only"
+AuthUserFile "/home/gmpmus/.htpasswds/public_html/secure-admin/passwd"
+
+# LiteSpeed-compatible access control
+<IfModule LiteSpeed>
+    # LiteSpeed handles Require valid-user fine for simple auth
+    Require valid-user
+</IfModule>
+
+# Fallback for older Apache versions
+<IfModule !LiteSpeed>
+    <IfModule mod_authz_core.c>
+        # Apache 2.4+
+        Require valid-user
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        # Apache 2.2
+        Order Deny,Allow
+        Deny from all
+        Satisfy any
+        Require valid-user
+    </IfModule>
+</IfModule>
+
+# Additional security
+Options -Indexes
+DirectoryIndex ip-manager.php
+
+# Prevent caching of admin pages
+<IfModule mod_headers.c>
+    <FilesMatch "\.(php|html)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# Extra security for PHP files
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_flag log_errors on
+    php_value error_log "/home/gmpmus/logs/admin_errors.log"
+</IfModule>
+
+# Block access to sensitive files
+<FilesMatch "\.(log|ini|conf|sql|bak)$">
+    <IfModule LiteSpeed>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+    <IfModule !LiteSpeed>
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order Allow,Deny
+            Deny from all
+        </IfModule>
+    </IfModule>
+</FilesMatch>
+
+# ============================================================================
+# NOTES:
+# - This directory requires authentication regardless of IP
+# - No IP restrictions here - that's handled by main .htaccess
+# - LiteSpeed handles basic "Require valid-user" fine
+# - Added compatibility checks for maximum portability
+# ============================================================================

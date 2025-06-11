@@ -1,0 +1,75 @@
+[07-Jun-2025 13:58:06 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Controllers/ITSupportController.php on line 335
+[07-Jun-2025 23:34:49 UTC] PHP Parse error:  syntax error, unexpected token "===" in /home/gmpmus/app/src/Router.php on line 14
+[07-Jun-2025 23:34:49 UTC] PHP Parse error:  syntax error, unexpected token "===", expecting "function" or "const" in /home/gmpmus/app/src/Controllers/AdminController.php on line 230
+[07-Jun-2025 23:35:22 UTC] PHP Parse error:  syntax error, unexpected token "===" in /home/gmpmus/app/src/Router.php on line 14
+[07-Jun-2025 23:40:00 UTC] PHP Parse error:  syntax error, unexpected token "===", expecting "function" or "const" in /home/gmpmus/app/src/Controllers/AdminController.php on line 230
+[07-Jun-2025 23:40:26 UTC] PHP Parse error:  syntax error, unexpected token "===", expecting "function" or "const" in /home/gmpmus/app/src/Controllers/AdminController.php on line 230
+[07-Jun-2025 23:43:43 UTC] PHP Parse error:  syntax error, unexpected token "namespace" in /home/gmpmus/app/vendor/nikic/fast-route/test/HackTypechecker/fixtures/all_options.php on line 3
+[07-Jun-2025 23:43:43 UTC] PHP Parse error:  syntax error, unexpected token "namespace" in /home/gmpmus/app/vendor/nikic/fast-route/test/HackTypechecker/fixtures/no_options.php on line 3
+[07-Jun-2025 23:43:43 UTC] PHP Parse error:  syntax error, unexpected token "namespace" in /home/gmpmus/app/vendor/nikic/fast-route/test/HackTypechecker/fixtures/empty_options.php on line 3
+[07-Jun-2025 23:44:06 UTC] Router dispatching: GET /
+[07-Jun-2025 23:44:06 UTC] PHP Warning:  Undefined array key "REQUEST_URI" in /home/gmpmus/app/src/Router.php on line 268
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Deprecated:  strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated in /home/gmpmus/app/src/Router.php on line 303
+[07-Jun-2025 23:44:06 UTC] PHP Fatal error:  Uncaught Error: Undefined constant "App\Controllers\RESOURCE_PATH" in /home/gmpmus/app/src/Controllers/BaseController.php:8
+Stack trace:
+#0 /home/gmpmus/app/src/Controllers/PortalController.php(11): App\Controllers\BaseController->view('portal.index', Array)
+#1 [internal function]: App\Controllers\PortalController->index()
+#2 /home/gmpmus/app/src/Router.php(279): call_user_func_array(Array, Array)
+#3 /home/gmpmus/app/src/Router.php(181): App\Router->handleFound('PortalControlle...', Array)
+#4 /home/gmpmus/app/test-routing.php(22): App\Router->dispatch('GET', '/')
+#5 {main}
+  thrown in /home/gmpmus/app/src/Controllers/BaseController.php on line 8
+[07-Jun-2025 23:44:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/src/Router.php:320
+Stack trace:
+#0 /home/gmpmus/app/route-list.php(5): App\Router->getRoutes()
+#1 {main}
+  thrown in /home/gmpmus/app/src/Router.php on line 320
+[07-Jun-2025 19:45:42 America/New_York] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 327
+[07-Jun-2025 23:46:00 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 327
+[07-Jun-2025 23:46:11 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 327
+[07-Jun-2025 23:46:52 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 327
+[07-Jun-2025 23:48:19 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 19:48:27 America/New_York] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:48:28 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:48:38 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:49:48 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 19:49:53 America/New_York] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:49:53 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:49:54 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:50:02 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:52:09 UTC] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 19:52:24 America/New_York] PHP Parse error:  syntax error, unexpected token "public", expecting end of file in /home/gmpmus/app/src/Router.php on line 357
+[07-Jun-2025 23:53:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/src/Router.php:322
+Stack trace:
+#0 /home/gmpmus/app/route-list.php(5): App\Router->getRoutes()
+#1 {main}
+  thrown in /home/gmpmus/app/src/Router.php on line 322
+[07-Jun-2025 23:53:03 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/debug-routes.php:12
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/debug-routes.php on line 12
+[07-Jun-2025 23:53:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/route-list.php:7
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/route-list.php on line 7
+[07-Jun-2025 23:54:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/dashboard.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/dashboard.php on line 39
+[07-Jun-2025 23:55:27 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/route-list-debug.php:13
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/route-list-debug.php on line 13
+[07-Jun-2025 23:55:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/dashboard.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/dashboard.php on line 39
+[07-Jun-2025 23:57:40 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method FastRoute\Dispatcher\GroupCountBased::getData() in /home/gmpmus/app/dashboard.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/gmpmus/app/dashboard.php on line 39

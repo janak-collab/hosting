@@ -1,0 +1,394 @@
+AWSTATS DATA FILE 7.9 (build 20230108)
+# If you remove this file, all statistics for date 202505 will be lost/reset.
+# Last config file used to build this data file was /home/gmpmus/tmp/awstats/ssl/awstats.gmpm.us.conf.
+
+# Position (offset in bytes) in this file for beginning of each section for
+# direct I/O access. If you made changes somewhere in this file, you should
+# also remove completely the MAP section (AWStats will rewrite it at next
+# update).
+BEGIN_MAP 28
+POS_GENERAL 2040                
+POS_TIME 2723                
+POS_VISITOR 9035                
+POS_DAY 10545               
+POS_DOMAIN 3418                
+POS_LOGIN 3705                
+POS_ROBOT 3940                
+POS_WORMS 4138                
+POS_EMAILSENDER 4269                
+POS_EMAILRECEIVER 4412                
+POS_SESSION 10656               
+POS_FILESIZE 12671               
+POS_SIDER 10839               
+POS_FILETYPES 4547                
+POS_DOWNLOADS 4738                
+POS_OS 4786                
+POS_BROWSER 4967                
+POS_SCREENSIZE 5348                
+POS_UNKNOWNREFERER 5422                
+POS_UNKNOWNREFERERBROWSER 5610                
+POS_ORIGIN 5692                
+POS_SEREFERRALS 5833                
+POS_PAGEREFS 5996                
+POS_SEARCHWORDS 6692                
+POS_KEYWORDS 6844                
+POS_MISC 2386                
+POS_ERRORS 6903                
+POS_CLUSTER 3561                
+POS_SIDER_404 7075                
+END_MAP
+
+# LastLine    = Date of last record processed - Last record line number in last log - Last record offset in last log - Last record signature value
+# FirstTime   = Date of first visit for history file
+# LastTime    = Date of last visit for history file
+# LastUpdate  = Date of last update - Nb of parsed records - Nb of parsed old records - Nb of parsed new records - Nb of parsed corrupted - Nb of parsed dropped
+# TotalVisits = Number of visits
+# TotalUnique = Number of unique visitors
+# MonthHostsKnown   = Number of hosts known
+# MonthHostsUnKnown = Number of hosts unknown
+BEGIN_GENERAL 8
+LastLine 20250601001014 396 103427 4882943345300
+FirstTime 20250530005711
+LastTime 20250531194941
+LastUpdate 20250601031046 396 0 395 0 0
+TotalVisits 41                  
+TotalUnique 36                  
+MonthHostsKnown 0                   
+MonthHostsUnknown 36                  
+END_GENERAL
+
+# Misc ID - Pages - Hits - Bandwidth
+BEGIN_MISC 10
+QuickTimeSupport 0 0 0
+AddToFavourites 0 91 0
+RealPlayerSupport 0 0 0
+JavaEnabled 0 0 0
+DirectorSupport 0 0 0
+TotalMisc 0 0 0
+FlashSupport 0 0 0
+WindowsMediaPlayerSupport 0 0 0
+JavascriptDisabled 0 0 0
+PDFSupport 0 0 0
+END_MISC
+
+# Hour - Pages - Hits - Bandwidth - Not viewed Pages - Not viewed Hits - Not viewed Bandwidth
+BEGIN_TIME 24
+0 18 46 405225 8 15 13163
+1 16 18 463251 46 62 106064
+2 26 26 27268 42 47 45813
+3 18 22 32496 5 7 5056
+4 17 43 79223 16 32 51391
+5 0 0 0 1 1 1229
+6 11 30 281061 11 16 6502
+7 0 0 0 1 1 52
+8 0 0 0 3 3 3172
+9 0 0 0 3 3 2510
+10 0 0 0 2 2 2458
+11 1 1 12420 2 3 3057
+12 5 5 38431 49 63 39107
+13 33 79 535922 67 98 57350
+14 37 47 68774 59 103 78240
+15 73 133 254125 29 79 40657
+16 30 34 62209 9 15 8691
+17 10 13 14728 26 28 13349
+18 38 60 78382 7 20 2660
+19 51 79 105641 13 31 6937
+20 2 2 24857 4 4 1387
+21 0 0 0 2 3 2520
+22 8 13 22394 19 27 17418
+23 21 32 41624 17 29 14882
+END_TIME
+
+# Domain - Pages - Hits - Bandwidth
+# The 25 first Pages must be first (order not required for others)
+BEGIN_DOMAIN 5
+us 393 650 1938599
+ca 10 10 377730
+gb 5 7 73092
+bd 4 13 121329
+be 3 3 37281
+END_DOMAIN
+
+# Cluster ID - Pages - Hits - Bandwidth
+BEGIN_CLUSTER 0
+END_CLUSTER
+
+# Login - Pages - Hits - Bandwidth - Last visit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_LOGIN 2
+jvidyarthi 211 354 483930 20250531194941
+gmpm_admin 57 57 120058 20250531000229
+END_LOGIN
+
+# Robot ID - Hits - Bandwidth - Last visit - Hits on robots.txt
+# The 25 first Hits must be first (order not required for others)
+BEGIN_ROBOT 2
+no_user_agent 1 37779 20250530041423 0
+curl 1 52 20250530230000 0
+END_ROBOT
+
+# Worm ID - Hits - Bandwidth - Last visit
+# The 5 first Hits must be first (order not required for others)
+BEGIN_WORMS 0
+END_WORMS
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first Hits must be first (order not required for others)
+BEGIN_EMAILSENDER 0
+END_EMAILSENDER
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first hits must be first (order not required for others)
+BEGIN_EMAILRECEIVER 0
+END_EMAILRECEIVER
+
+# Files type - Hits - Bandwidth - Bandwidth without compression - Bandwidth after compression
+BEGIN_FILETYPES 7
+png 54 43146 0 0
+svg 14 28755 0 0
+html 60 763873 0 0
+php 328 441856 0 0
+js 60 114041 0 0
+css 140 544360 0 0
+woff 27 612000 0 0
+END_FILETYPES
+
+# Downloads - Hits - Bandwidth
+BEGIN_DOWNLOADS 0
+END_DOWNLOADS
+
+# OS ID - Hits
+BEGIN_OS ID - Hits - Pages 9
+macosx15 2 2
+ios_iphone 67 20
+win7 2 2
+Unknown 3 3
+win10 597 378
+win8 1 1
+androidmarshmallow 4 2
+unix 1 1
+linux 6 6
+END_OS
+
+# Browser ID - Hits - Pages
+BEGIN_BROWSER 16
+chrome32.0.1667.0 1 1
+mozilla 3 3
+chrome130.0.0.0 4 2
+chrome137.0.0.0 10 10
+chrome117.0.5938.132 27 8
+chrome136.0.0.0 527 346
+chrome79.0.3945.79 27 8
+chrome27.0.1453.116 1 1
+chrome117.0.0.0 3 3
+chrome110.0.0.0 1 1
+safari10.0 13 4
+chrome135.0.0.0 2 2
+chrome83.0.4103.61 2 2
+chrome116.0.0.0 6 6
+chrome58.0.3029.110 2 2
+safari 54 16
+END_BROWSER
+
+# Screen size - Hits
+BEGIN_SCREENSIZE 0
+END_SCREENSIZE
+
+# Unknown referer OS - Last visit date
+BEGIN_UNKNOWNREFERER 1
+Mozilla/5.0_(compatible;_InternetMeasurement/1.0;__https://internet-measurement.com/) 20250531144026
+END_UNKNOWNREFERER
+
+# Unknown referer Browser - Last visit date
+BEGIN_UNKNOWNREFERERBROWSER 0
+END_UNKNOWNREFERERBROWSER
+
+# Origin - Pages - Hits 
+BEGIN_ORIGIN 6
+From0 229 232
+From1 0 0
+From2 2 2
+From3 38 123
+From4 146 326
+From5 0 0
+END_ORIGIN
+
+# Search engine referers ID - Pages - Hits
+BEGIN_SEREFERRALS 1
+www_google_com 2 2
+END_SEREFERRALS
+
+# External page referers - Pages - Hits
+# The 25 first Pages must be first (order not required for others)
+BEGIN_PAGEREFS 8
+https://webmail.gmpm.us/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/open_sans.min.css 15 15
+https://cpanel.gmpm.us/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/open_sans.min.css 12 12
+http://cpanel.gmpm.us 6 6
+http://webmail.gmpm.us 5 5
+https://cpanel.gmpm.us/cPanel_magic_revision_1682620142/unprotected/cpanel/style_v2_optimized.css 0 28
+https://cpanel.gmpm.us 0 12
+https://webmail.gmpm.us/cPanel_magic_revision_1682620142/unprotected/cpanel/style_v2_optimized.css 0 30
+https://webmail.gmpm.us 0 15
+END_PAGEREFS
+
+# Search keyphrases - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_SEARCHWORDS 0
+END_SEARCHWORDS
+
+# Search keywords - Number of search
+# The 25 first number of search must be first (order not required for others)
+BEGIN_KEYWORDS 0
+END_KEYWORDS
+
+# Errors - Hits - Bandwidth
+BEGIN_ERRORS 8
+400 21 1040
+308 3 255
+500 6 712
+401 159 58523
+302 35 9310
+301 1 707
+404 89 89256
+403 162 161973
+END_ERRORS
+
+# URL with 404 errors - Hits - Last URL referrer
+BEGIN_SIDER_404 27
+/new-structure/secure-admin/ip-manager.php 1 -
+/new-structure/public/assets/css/admin-styles.css 1 https://gmpm.us/new-structure/public/admin/tickets.php
+/new-structure/public/api/phone-notes/submit 8 https://gmpm.us/new-structure/public/phone-note.php
+/new-structure/public/phone-notet.php 1 -
+/new-structure/public/admin/index.php 1 https://gmpm.us/new-structure/public/admin/tickets.php
+/new-structure/public/it-support 1 https://gmpm.us/new-structure/public/
+/new-structure/public/admin/phone-notes/print/3 2 https://gmpm.us/new-structure/public/admin/phone-notes/
+//public_html/secure-admin/ip-manager.php 2 -
+/new-structure/public/admin/login 3 -
+/new-structure/public/api/it-support/submit 2 https://gmpm.us/new-structure/public/it-support.php
+/new-structure/public/admin/logout 2 https://gmpm.us/new-structure/public/admin/tickets.php
+/new-structure/public/it-ticket.php 1 -
+/new-structure/public/phone-note-print.php 1 https://gmpm.us/new-structure/public/phone-note.php
+/new-structure/public/it-enhanced.php 1 -
+/new-structure/public/view-tickets.php 1 https://gmpm.us/new-structure/public/it-support.php
+//errors/400.html 1 -
+/new-structure/public/itticket.php 1 -
+/new-structure/public/ 1 -
+/new-structure/public/admin/phone-notes/print/2 1 https://gmpm.us/new-structure/public/admin/phone-notes/
+/new-structure/public/admin/tickets 1 https://gmpm.us/new-structure/public/it-support.php
+/new-structure/secure-admin/ip_manager.php 1 -
+/favicon.png 2 -
+/new-structure/public_html/secure-admin/ip-manager.php 1 -
+/ 49 -
+/new-structure/public/src/Models/itticket.php 1 -
+/new-structure/public/src/Models/ITTicket.php 1 -
+/errors/400.html 1 -
+END_SIDER_404
+
+# Host - Pages - Hits - Bandwidth - Last visit date - [Start date of last visit] - [Last page of last visit]
+# [Start date of last visit] and [Last page of last visit] are saved only if session is not finished
+# The 25 first Hits must be first (order not required for others)
+BEGIN_VISITOR 36
+68.134.31.125 343 522 768928 20250531194941
+205.169.39.90 5 14 133751 20250530005726
+205.169.39.235 5 15 134882 20250530005716
+205.169.39.42 4 14 122455 20250530065355
+107.173.151.93 4 14 122458 20250530133817
+205.169.39.12 4 13 121328 20250530065351
+104.253.203.36 4 13 121332 20250530133819
+180.149.8.53 4 13 121329 20250530133816
+34.118.87.200 4 13 121322 20250530005814
+104.253.214.14 4 14 122459 20250530133814
+91.84.87.137 2 4 60671 20250531014553
+34.56.57.237 2 2 24850 20250530013708
+192.175.111.245 2 2 75546 20250530013811
+64.15.129.118 2 2 75558 20250530013812
+72.81.228.74 2 4 7360 20250530132625
+154.28.229.40 2 2 24841 20250530191651
+154.28.229.18 2 2 24852 20250530064549
+146.70.185.32 2 2 0 20250530010730
+87.236.176.233 1 1 12426 20250531064955
+64.15.129.107 1 1 37767 20250530013807
+87.236.176.126 1 1 12428 20250531132214
+146.70.166.160 1 1 12421 20250531003114
+154.28.229.242 1 1 12424 20250530124423
+154.28.229.248 1 1 12423 20250530122515
+87.236.176.197 1 1 12427 20250531144026
+192.175.111.232 1 1 37767 20250530013808
+209.131.254.132 1 1 805 20250531140959
+64.15.129.105 1 1 37779 20250530013811
+159.223.211.21 1 1 12422 20250530185729
+192.175.111.236 1 1 37779 20250530013812
+64.15.129.116 1 1 37767 20250530013808
+154.28.229.34 1 1 12427 20250530203451
+154.28.229.214 1 1 12430 20250530203451
+154.28.229.27 1 1 12420 20250530114439
+64.15.129.110 1 1 37767 20250530013807
+143.198.36.156 1 1 12430 20250531125542
+END_VISITOR
+
+# Date - Pages - Hits - Bandwidth - Visits
+BEGIN_DAY 2
+20250530 289 503 2265056 31
+20250531 126 180 282975 10
+END_DAY
+
+# Session range - Number of visits
+BEGIN_SESSION 5
+1h+ 4
+30s-2mn 1
+2mn-5mn 1
+0s-30s 34
+30mn-1h 1
+END_SESSION
+
+# URL - Pages - Bandwidth - Entry - Exit
+# The 25 first Pages must be first (order not required for others)
+BEGIN_SIDER 36
+/new-structure/public/it-support.php 102 174119 2 3
+/new-structure/public/admin/tickets.php 71 46197 0 1
+/secure-admin/ip-manager.php 48 112312 1 0
+/ 42 750469 33 24
+/new-structure/public/admin/login.php 40 28133 1 1
+/new-structure/public/phone-note.php 16 35740 1 1
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Bold-webfont.woff 9 201888 0 6
+/new-structure/public/admin/clean-login.php 9 6806 2 1
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Semibold-webfont.woff 9 206172 0 3
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Regular-webfont.woff 9 203940 0 0
+/new-structure/public/admin/phone-notes/ 8 7828 0 0
+/new-structure/public/it-support-enhanced.php 7 19114 0 0
+/new-structure/public/test-setup.php 7 1838 1 0
+/new-structure/public/view-tickets.php 5 2026 0 0
+/new-structure/public/admin/phone-notes/print.php 4 3811 0 1
+/new-structure/public/api/phone-notes/submit.php 4 243 0 0
+/secure-admin/debug-env-set.php 2 3164 0 0
+/secure-admin/test.php 2 170 0 0
+/errors/400.html 2 1198 0 0
+/new-structure/public/admin/post-test.php 2 281 0 0
+/secure-admin/test-ip-blocking.php 2 2155 0 0
+/new-structure/public/admin/test.php 1 14 0 0
+/new-structure/public/api/phone-notes/test.php 1 22 0 0
+/secure-admin/verify-requireall.php 1 545 0 0
+//errors/400.html 1 599 0 0
+/errors/403.html 1 611 0 0
+/secure-admin/check-htaccess-conflicts.php 1 794 0 0
+/new-structure/public/admin/phone-notes/test.php 1 31 0 0
+/errors/502.html 1 636 0 0
+/errors/500.html 1 636 0 0
+/new-structure/public/it-support-pro.php 1 3423 0 0
+/errors/401.html 1 599 0 0
+/errors/404.html 1 625 0 0
+/errors/503.html 1 643 0 0
+/secure-admin/test-htaccess.php 1 918 0 0
+/new-structure/public/test.html 1 29 0 0
+END_SIDER
+
+# Payload Range - Payload Frequency
+BEGIN_FILESIZE 7
+1K-2K 566
+500-1K 433
+44-100 102
+100-500 55
+2K-5K 71
+5K+ 82
+0-44 66
+END_FILESIZE

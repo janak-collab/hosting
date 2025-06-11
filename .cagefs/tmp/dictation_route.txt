@@ -1,0 +1,4 @@
+    case $requestUri === '/dictation':
+        require APP_PATH . '/public-endpoints/dictation.php';
+        break;
+        

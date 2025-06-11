@@ -1,0 +1,257 @@
+<?php
+namespace App\Services;
+
+use App\Database\Connection;
+use App\Models\User;
+use App\Models\UserAuditLog;
+use PDO;
+
+class AuthService {
+    private $db;
+    private $userModel;
+    private $auditLog;
+    private $htpasswdService;
+    
+    public function __construct() {
+        $this->db = Connection::getInstance()->getConnection();
+        $this->userModel = new User();
+        $this->auditLog = new UserAuditLog();
+        $this->htpasswdService = new HtpasswdService();
+    }
+    
+    /**
+     * Authenticate user against htpasswd and load from database
+     */
+    public function authenticate($username, $password) {
+        try {
+            // First check if user is locked
+            if ($this->userModel->isLocked($username)) {
+                $this->auditLog->log(
+                    $this->userModel->getByUsername($username)['id'] ?? null,
+                    'login_failed',
+                    'Account locked',
+                    null
+                );
+                return false;
+            }
+            
+            // Verify password against htpasswd
+            if (!$this->htpasswdService->verifyPassword($username, $password)) {
+                // Record failed login
+                $this->userModel->recordFailedLogin($username, $_SERVER['REMOTE_ADDR'] ?? null);
+                $user = $this->userModel->getByUsername($username);
+                if ($user) {
+                    $this->auditLog->log($user['id'], 'login_failed', null, null);
+                }
+                return false;
+            }
+            
+            // Get user from database
+            $user = $this->userModel->getByUsername($username);
+            
+            // If user doesn't exist in DB but exists in htpasswd, create them
+            if (!$user && $this->htpasswdService->userExists($username)) {
+                $userId = $this->userModel->create([
+                    'username' => $username,
+                    'full_name' => ucfirst($username),
+                    'role' => 'user',
+                    'is_active' => 1,
+                    'notes' => 'Auto-created on first login',
+                    'created_by' => null
+                ]);
+                
+                $user = $this->userModel->getById($userId);
+                $this->auditLog->log($userId, 'created', null, 'Auto-created on first login');
+            }
+            
+            // Check if user is active
+            if (!$user || !$user['is_active']) {
+                return false;
+            }
+            
+            // Reset failed attempts on successful login
+            $this->userModel->resetFailedAttempts($user['id']);
+            
+            // Create session
+            $this->createSession($user);
+            
+            return true;
+            
+        } catch (\Exception $e) {
+            error_log("Authentication error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Create user session
+     */
+    private function createSession($user) {
+        session_regenerate_id(true);
+        
+        $_SESSION['authenticated'] = true;
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['full_name'] = $user['full_name'] ?: $user['username'];
+        $_SESSION['user_role'] = $user['role'];
+        $_SESSION['login_time'] = time();
+        
+        // Set role-specific flags for easy checking
+        $_SESSION['is_user'] = true;
+        $_SESSION['is_admin'] = in_array($user['role'], ['admin', 'super_admin']);
+        $_SESSION['is_super_admin'] = $user['role'] === 'super_admin';
+        
+        // For backward compatibility
+        if ($_SESSION['is_admin']) {
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['admin_username'] = $user['username'];
+        }
+    }
+    
+    /**
+     * Check if user has a specific role or higher
+     */
+    public function requireRole($minRole) {
+        // First try to authenticate via HTTP Basic Auth if not already authenticated
+        if (!isset($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+            $username = $_SERVER['PHP_AUTH_USER'] ?? null;
+            if ($username) {
+                // Auto-authenticate HTTP Basic Auth users
+                $db = Connection::getInstance()->getConnection();
+                $stmt = $db->prepare("SELECT * FROM users WHERE username = :username AND is_active = 1");
+                $stmt->execute(['username' => $username]);
+                $userData = $stmt->fetch(\PDO::FETCH_ASSOC);
+                
+                if ($userData) {
+                    // Set up session
+                    $_SESSION['authenticated'] = true;
+                    $_SESSION['user_id'] = $userData['id'];
+                    $_SESSION['username'] = $userData['username'];
+                    $_SESSION['user_role'] = $userData['role'];
+                    $_SESSION['is_user'] = true;
+                    $_SESSION['is_admin'] = in_array($userData['role'], ['admin', 'super_admin']);
+                    $_SESSION['is_super_admin'] = $userData['role'] === 'super_admin';
+                    
+                    // For backward compatibility
+                    if ($_SESSION['is_admin']) {
+                        $_SESSION['admin_logged_in'] = true;
+                        $_SESSION['admin_username'] = $userData['username'];
+                    }
+                }
+            }
+        }
+        
+        // Now check if authenticated
+        if (!isset($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+            header('Location: /login');
+            exit;
+        }
+
+        $roleHierarchy = [
+            'user' => 1,
+            'admin' => 2,
+            'super_admin' => 3
+        ];
+
+        $userRole = $_SESSION['user_role'] ?? 'user';
+        $userLevel = $roleHierarchy[$userRole] ?? 1;
+        $requiredLevel = $roleHierarchy[$minRole] ?? 1;
+
+        if ($userLevel < $requiredLevel) {
+            header('HTTP/1.1 403 Forbidden');
+            die('Access denied. Insufficient permissions.');
+        }
+    }
+    
+    /**
+     * Check if user has specific permission
+     */
+    public function hasPermission($permission) {
+        if (!isset($_SESSION['authenticated']) || !$_SESSION['authenticated']) {
+            return false;
+        }
+        
+        $permissions = [
+            'user' => [
+                'view_dashboard',
+                'submit_forms',
+                'view_own_submissions'
+            ],
+            'admin' => [
+                'view_dashboard',
+                'submit_forms',
+                'view_own_submissions',
+                'manage_tickets',
+                'manage_phone_notes',
+                'view_reports'
+            ],
+            'super_admin' => [
+                'view_dashboard',
+                'submit_forms',
+                'view_own_submissions',
+                'manage_tickets',
+                'manage_phone_notes',
+                'view_reports',
+                'manage_users',
+                'manage_providers',
+                'system_settings'
+            ]
+        ];
+        
+        $userRole = $_SESSION['user_role'] ?? 'user';
+        return in_array($permission, $permissions[$userRole] ?? []);
+    }
+    
+    /**
+     * Get current user
+     */
+    public function getCurrentUser() {
+        if (!isset($_SESSION['user_id'])) {
+            return null;
+        }
+        
+        return $this->userModel->getById($_SESSION['user_id']);
+    }
+    
+    /**
+     * Logout user
+     */
+    public function logout() {
+        $_SESSION = [];
+        session_destroy();
+    }
+    
+    /**
+     * Check if user is logged in
+     */
+    public function isLoggedIn() {
+        return isset($_SESSION['authenticated']) && $_SESSION['authenticated'];
+    }
+    
+    /**
+     * Get user role
+     */
+    public function getUserRole() {
+        return $_SESSION['user_role'] ?? null;
+    }
+    
+    /**
+     * Legacy method for backward compatibility
+     */
+    public function authenticate_old($username, $password) {
+        $stmt = $this->db->prepare("
+            SELECT id, username, password_hash, role 
+            FROM users 
+            WHERE username = :username AND is_active = 1
+        ");
+        $stmt->execute(['username' => $username]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            return false;
+        }
+        
+        $this->createSession($user);
+        return true;
+    }
+}

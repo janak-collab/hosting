@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>Greater Maryland Pain Management Portal</h1>
+            <p>Welcome to the internal staff portal</p>
+        </div>
+        
+        <div class="form-content">
+            <p>Welcome, <?php echo htmlspecialchars($user ?? 'User'); ?>!</p>
+            
+            <div style="display: grid; gap: 1rem; margin-top: 2rem;">
+                <a href="<?php echo url('/phone-note'); ?>" class="btn btn-primary">
+                    📞 Phone Note Form
+                </a>
+                <a href="<?php echo url('/it-support'); ?>" class="btn btn-secondary">
+                    💻 IT Support Request
+                </a>
+                <a href="<?php echo url('/admin/tickets'); ?>" class="btn btn-secondary">
+                    📋 View Tickets
+                </a>
+                <a href="<?php echo url('/admin'); ?>" class="btn btn-secondary">
+                    🔧 Admin Area
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; <?php echo date('Y'); ?> Greater Maryland Pain Management</p>
+        <p>Internal Use Only</p>
+    </div>
+</div>
