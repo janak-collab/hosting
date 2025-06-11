@@ -10,5 +10,8 @@ storage/
 *.pem
 *.key
 *.env
-
+.cache/
+.cagefs/
+.caldav/
+.cl.selector/
 .git-credentials

@@ -1,9 +1,0 @@
-    public function getCategories() {
-        $sql = "SELECT DISTINCT category
-                FROM ASC_procedures
-                WHERE category IS NOT NULL
-                ORDER BY category";
-
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
-    }
