@@ -1,21 +1,21 @@
-*.log
+# Sensitive files
 .env
+*.env
+.git-credentials
+*.pem
+*.key
+*.log
+*.bak
+*.swp
+
+# Common dependency and runtime folders
 vendor/
 node_modules/
 storage/
-*.bak
-*.swp
-.ssh/id_ed25519
-.ssh/
-*.pem
-*.key
-*.env
-.cache/
-.cagefs/
-.caldav/
-.cl.selector/
-.git-credentials
-# Ignore server/user config directories
+tmp/
+temp_restore/
+
+# Server/user-specific config dirs
 .cache/
 .cagefs/
 .caldav/
@@ -25,5 +25,11 @@ storage/
 .gnupg/
 .sitepad/
 .spamassassin/
+.softaculous/
 .trash/
+mail/
+ssl/
 
+# SSH keys and config
+.ssh/
+.ssh/id_ed25519
