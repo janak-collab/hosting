@@ -284,13 +284,13 @@ LimitRequestBody 10485760
 # ERROR HANDLING
 # ============================================================================
 # Custom error pages
-ErrorDocument 400 /errors/400.php
-ErrorDocument 401 /errors/401.php
-ErrorDocument 403 /errors/403.php
-ErrorDocument 404 /errors/404.php
-ErrorDocument 500 /errors/500.php
-ErrorDocument 502 /errors/502.php
-ErrorDocument 503 /errors/503.php
+ErrorDocument 400 /errors/400.html
+ErrorDocument 401 /errors/401.html
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 500 /errors/500.html
+ErrorDocument 502 /errors/502.html
+ErrorDocument 503 /errors/503.html
 
 # ============================================================================
 # PHP CONFIGURATION (if mod_php is available)
