@@ -42,8 +42,8 @@ class IpWhitelist implements MiddlewareInterface {
             ]);
             
             header('HTTP/1.0 403 Forbidden');
-            if (file_exists(RESOURCE_PATH . '/views/errors/403.php')) {
-                include RESOURCE_PATH . '/views/errors/403.php';
+            if (file_exists(APP_PATH . '/templates/views/errors/403.php')) {
+                include APP_PATH . '/templates/views/errors/403.php';
             } else {
                 echo 'Access Forbidden';
             }

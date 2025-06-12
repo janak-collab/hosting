@@ -27,8 +27,8 @@ class Auth implements MiddlewareInterface {
         header('WWW-Authenticate: Basic realm="Greater Maryland Pain Management - Authorized Access Only"');
         header('HTTP/1.0 401 Unauthorized');
         
-        if (file_exists(RESOURCE_PATH . '/views/errors/401.php')) {
-            include RESOURCE_PATH . '/views/errors/401.php';
+        if (file_exists(APP_PATH . '/templates/views/errors/401.php')) {
+            include APP_PATH . '/templates/views/errors/401.php';
         } else {
             echo 'Unauthorized Access';
         }
