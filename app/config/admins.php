@@ -10,6 +10,7 @@ return [
     'admin_users' => [
         'jvidyarthi',    // Admin user
         'admin',         // Default admin
+        'gmpmus',        // System user
         // Add more admin usernames here as needed
     ],
     

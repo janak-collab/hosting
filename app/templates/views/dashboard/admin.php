@@ -46,7 +46,7 @@ $userRole = $userRole ?? 'Administrator';
                     <a href="/phone-note" class="btn btn-primary">📞 Phone Note Form</a>
                     <a href="/it-support" class="btn btn-primary">💻 IT Support Request</a>
                     <a href="/admin/tickets" class="btn btn-primary">📋 View IT Tickets</a>
-                    <a href="/secure-admin/ip-address-manager.php" class="btn btn-secondary">🔒 IP Manager</a>
+                    <a href="/ip-address-manager" class="btn btn-secondary">🔒 IP Manager</a>
                 </div>
 
                 <!-- Admin Functions -->
@@ -87,7 +87,7 @@ $userRole = $userRole ?? 'Administrator';
                         <h4>💻 IT Management</h4>
                         <div class="section-links">
                             <a href="/admin/tickets" class="section-link">→ IT Support Tickets</a>
-                            <a href="/secure-admin/ip-address-manager.php" class="section-link">→ IP Access Control</a>
+                            <a href="/ip-address-manager" class="section-link">→ IP Access Control</a>
                             <a href="/admin/logs" class="section-link">→ System Logs</a>
                         </div>
                     </div>
