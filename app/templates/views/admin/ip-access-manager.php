@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IP Access Manager - GMPM Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container { max-width: 1200px; }
-        code { background: #f4f4f4; padding: 2px 4px; border-radius: 3px; }
-    </style>
+    <link rel="stylesheet" href="/assets/css/modules/ip-manager.css">
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark mb-4">

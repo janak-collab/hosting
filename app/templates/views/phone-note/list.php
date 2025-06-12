@@ -11,49 +11,7 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f26522">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <style>
-        .notes-table {
-            width: 100%;
-            background: var(--card-background);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .notes-table th {
-            background: var(--secondary-color);
-            color: white;
-            padding: 1rem;
-            text-align: left;
-        }
-        
-        .notes-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 2rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .status-new {
-            background: #e3f2fd;
-            color: #1565c0;
-        }
-        
-        .status-reviewed {
-            background: #f3e5f5;
-            color: #6a1b9a;
-        }
-        
-        .status-closed {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-    </style>
+<link rel="stylesheet" href="/assets/css/modules/phone-notes.css">
     <link rel="stylesheet" href="/assets/css/header-styles.css">
 </head>
 <body>

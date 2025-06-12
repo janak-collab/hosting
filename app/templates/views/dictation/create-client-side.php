@@ -6,69 +6,7 @@
     <title><?php echo htmlspecialchars($procedure['name']); ?> - 
 Dictation</title>
     <link rel="stylesheet" href="/assets/css/app.css">
-    <style>
-        .dictation-preview {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin-top: 2rem;
-            min-height: 400px;
-            font-family: 'Times New Roman', serif;
-            line-height: 1.6;
-            display: none;
-        }
-        
-        .dictation-preview.active {
-            display: block;
-        }
-        
-        .action-buttons {
-            position: sticky;
-            top: 20px;
-            background: white;
-            padding: 1rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            margin-top: 2rem;
-        }
-        
-        .no-save-notice {
-            background: #e6f7ff;
-            border: 1px solid #91d5ff;
-            color: #0050b3;
-            padding: 1rem;
-            border-radius: var(--radius);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            
-            .dictation-preview {
-                border: none;
-                padding: 0;
-            }
-        }
-        
-        .copy-success {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--success-color);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            display: none;
-            z-index: 1000;
-        }
-    </style>
+<link rel="stylesheet" href="/assets/css/modules/dictation.css">
 </head>
 <body>
     <div class="container">

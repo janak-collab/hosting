@@ -83,7 +83,7 @@
                     </div>
                     
                     <!-- Restrictions -->
-                    <div class="form-group" id="restrictionsGroup" style="display: none;">
+                    <div class="form-group" id="restrictionsGroup" class="hidden">
                         <label for="restrictions" class="form-label">
                             Work Restrictions
                         </label>

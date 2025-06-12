@@ -881,3 +881,8 @@ tr:hover td {
         display: none;
     }
 }
+
+/* Utility class for hidden elements */
+.hidden {
+    display: none;
+}

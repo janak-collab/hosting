@@ -1,0 +1,335 @@
+/* ============================================
+   Forms Module Styles
+   Styles for the forms library and form builders
+   ============================================ */
+
+/* Forms Library Layout */
+.forms-library {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.forms-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.forms-search {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+.forms-search-input {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1.125rem;
+    border: 2px solid var(--border-color);
+    border-radius: 9999px;
+    transition: all 0.2s;
+}
+
+.forms-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.1);
+}
+
+/* Form Categories */
+.form-categories {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.form-category-tab {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 9999px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.form-category-tab:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.form-category-tab.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+/* Forms Grid */
+.forms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-card {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.form-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-card-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    flex: 1;
+}
+
+.form-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Form Builder */
+.form-builder {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 2rem;
+    height: calc(100vh - 200px);
+}
+
+.form-builder-sidebar {
+    background: var(--background-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.form-builder-canvas {
+    background: white;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.form-builder-properties {
+    background: var(--background-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+/* Form Elements Palette */
+.form-elements {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-element {
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1rem;
+    cursor: grab;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.form-element:hover {
+    border-color: var(--primary-color);
+    transform: translateX(4px);
+}
+
+.form-element-icon {
+    font-size: 1.25rem;
+    opacity: 0.7;
+}
+
+.form-element-label {
+    font-weight: 500;
+}
+
+/* Form Preview */
+.form-preview {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-preview-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.form-preview-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.form-preview-description {
+    color: var(--text-secondary);
+}
+
+.form-preview-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--background-color);
+    border-radius: var(--radius);
+}
+
+.form-preview-section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Form Validation Styles */
+.form-field-valid {
+    border-color: var(--success-color) !important;
+}
+
+.form-field-invalid {
+    border-color: var(--error-color) !important;
+}
+
+.form-field-error {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-field-success {
+    color: var(--success-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Form Progress */
+.form-progress {
+    margin-bottom: 2rem;
+}
+
+.form-progress-bar {
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.form-progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+}
+
+.form-progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.form-progress-step {
+    text-align: center;
+    flex: 1;
+}
+
+.form-progress-step-number {
+    width: 32px;
+    height: 32px;
+    background: var(--border-color);
+    color: var(--text-secondary);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-progress-step.active .form-progress-step-number {
+    background: var(--primary-color);
+    color: white;
+}
+
+.form-progress-step.completed .form-progress-step-number {
+    background: var(--success-color);
+    color: white;
+}
+
+.form-progress-step-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Form Submission */
+.form-submission-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.form-submission-modal {
+    background: white;
+    border-radius: var(--radius);
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+}
+
+.form-submission-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.form-submission-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-submission-message {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}

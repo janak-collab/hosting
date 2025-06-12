@@ -9,78 +9,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f26522">
-    <style>
-            @page {
-                margin: 0.5in;
-                size: letter;
-            }
-            
-            @media print {
-                @page {
-                    margin: 0.25in;
-                }
-                
-                body { 
-                    margin: 0;
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
-                }
-                
-                .no-print { 
-                    display: none !important; 
-                }
-                
-                /* Remove any margins that might interfere */
-                html, body {
-                    height: 100%;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                }
-            }
-            
-            body {
-                font-family: Arial, sans-serif;
-                line-height: 1.4;
-                color: #000;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-            .header {
-                text-align: center;
-                border-bottom: 2px solid #000;
-                padding-bottom: 10px;
-                margin-bottom: 20px;
-            }
-            .info-row {
-                display: flex;
-                margin-bottom: 10px;
-            }
-            .info-label {
-                font-weight: bold;
-                width: 150px;
-            }
-            .message-box {
-                border: 1px solid #000;
-                padding: 15px;
-                margin: 20px 0;
-                min-height: 100px;
-            }
-            .footer {
-                margin-top: 50px;
-                border-top: 1px solid #000;
-                padding-top: 20px;
-            }
-            .print-button {
-                background: #f26522;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                margin: 20px;
-            }
-        </style>
+    <link rel="stylesheet" href="/assets/css/modules/phone-notes.css">
 </head>
 <body>
     <div class="no-print" style="text-align: center;">

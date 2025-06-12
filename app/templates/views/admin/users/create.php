@@ -5,58 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create User - Greater Maryland Pain Management</title>
     <link rel="stylesheet" href="/assets/css/app.css">
-    <style>
-        .password-strength {
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            border-radius: var(--radius);
-            font-size: 0.875rem;
-        }
-        
-        .strength-weak {
-            background: #fee;
-            color: #c53030;
-        }
-        
-        .strength-fair {
-            background: #fef3c7;
-            color: #d97706;
-        }
-        
-        .strength-good {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        
-        .strength-strong {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .password-requirements {
-            background: #f7fafc;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin-top: 1rem;
-            font-size: 0.875rem;
-        }
-        
-        .requirement {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .requirement.met {
-            color: var(--success-color);
-        }
-        
-        .requirement.unmet {
-            color: var(--error-color);
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/modules/user-management.css">
 </head>
 <body>
     <div class="container">

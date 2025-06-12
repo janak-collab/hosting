@@ -11,69 +11,7 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#f26522">
     <link rel="stylesheet" href="/assets/css/app.css">
-    <style>
-        .provider-section {
-            background: #f7fafc;
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            border: 1px solid var(--border-color);
-            margin-top: 2rem;
-        }
-        
-        .provider-section h3 {
-            color: var(--secondary-color);
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .provider-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        
-        .provider-button {
-            padding: 1rem;
-            background: var(--card-background);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .provider-button:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        .phone-preview {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-        
-        .hipaa-warning {
-            background: #fef5e7;
-            border: 2px solid var(--warning-color);
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            color: #744210;
-            display: none;
-            align-items: flex-start;
-            gap: 0.75rem;
-        }
-        
-        .appointment-info {
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/modules/phone-notes.css">
     <link rel="stylesheet" href="/assets/css/header-styles.css">
 </head>
 <body>

@@ -6,54 +6,7 @@
     <title><?php echo htmlspecialchars($procedure['name'] ?? 'Dictation'); ?> - 
 GMPM</title>
     <link rel="stylesheet" href="/assets/css/app.css">
-    <style>
-        .template-content {
-            background: #f8f9fa;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            font-family: 'Times New Roman', serif;
-            font-size: 14pt;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-        
-        .no-print {
-            display: block;
-        }
-        
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-            
-            .template-content {
-                border: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            body {
-                margin: 1in;
-            }
-        }
-        
-        .patient-field {
-            background: yellow;
-            padding: 2px 4px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        
-        .billing-info {
-            background: #e3f2fd;
-            border: 1px solid #90caf9;
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin: 1rem 0;
-        }
-    </style>
+<link rel="stylesheet" href="/assets/css/modules/dictation.css">
 </head>
 <body>
     <div class="container no-print">

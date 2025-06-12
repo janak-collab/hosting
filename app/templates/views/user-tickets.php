@@ -6,38 +6,7 @@
     <title>My Tickets - Greater Maryland Pain Management</title>
     <link rel="stylesheet" href="/assets/css/app.css">
     
-    <style>
-        .ticket-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-        
-        .tab-button {
-            padding: 0.75rem 1.5rem;
-            background: none;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-        
-        .tab-button.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/modules/tickets.css">
 </head>
 <body>
     <div class="container">
