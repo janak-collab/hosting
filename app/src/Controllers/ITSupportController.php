@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use App\Services\Logger;
-
 use App\Models\ITTicket;
 use App\Services\EmailService;
 use App\Services\ValidationService;
@@ -54,20 +53,7 @@ class ITSupportController extends BaseController {
      * Handle form submission
      */
     public function handleSubmission() {
-        // Immediate debug
-        error_log("ITSupportController::handleSubmission - Method called!");
-        file_put_contents('/tmp/it-debug.log', "Method called at " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
-    
         header('Content-Type: application/json');
-
-        // Debug logging
-        error_log("=== ITSupportController::handleSubmission ===");
-        error_log("POST data: " . json_encode($_POST));
-        error_log("Session data: " . json_encode($_SESSION ?? []));
-        error_log("CSRF from POST: " . ($_POST['csrf_token'] ?? 'not set'));
-        error_log("CSRF from SESSION: " . ($_SESSION['csrf_token'] ?? 'not set'));
-
-
         
         // Check rate limiting
         $identifier = $_SESSION['user_id'] ?? $_SERVER['REMOTE_ADDR'];
@@ -147,9 +133,10 @@ class ITSupportController extends BaseController {
      * Display admin panel
      */
     public function showAdminPanel() {
-        // Check if admin is logged in
-        if (!isset($_SESSION['admin_logged_in']) || !$_SESSION['admin_logged_in']) {
-            header('Location: /admin/login');
+        // Check if user is admin via HTTP Auth
+        $currentUser = $_SERVER['PHP_AUTH_USER'] ?? '';
+        if (!$this->isAdmin($currentUser)) {
+            require_once __DIR__ . '/../../templates/views/errors/403-admin.php';
             exit;
         }
         
@@ -170,46 +157,22 @@ class ITSupportController extends BaseController {
     }
     
     /**
-     * Handle admin login
+     * Handle admin redirect
      */
-    public function handleAdminLogin() {
-        Logger::logError('=== LOGIN DEBUG START ===');
-        Logger::channel('app')->debug("Login attempt", ["method" => $_SERVER['REQUEST_METHOD']]);
-        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
-            
-            Logger::logError('Username provided: ', ['username' => $username]);
-            Logger::channel('app')->debug("Login attempt", ["password_length" => strlen($password)]);
-            
-            try {
-                $authService = new \App\Services\AuthService();
-                $result = $authService->authenticate($username, $password);
-                Logger::channel('app')->debug("Auth result", ["success" => $result]);
-                
-                if ($result) {
-                    Logger::channel('app')->debug("Session after auth", ["session" => $_SESSION]);
-                    header('Location: /');
-                } else {
-                    $loginError = 'Invalid credentials';
-                }
-            } catch (\Exception $e) {
-                Logger::logError('Auth exception: ', ['error' => $e->getMessage()]);
-                $loginError = 'Authentication error: ' . $e->getMessage();
-            }
-        }
-        
-        require_once __DIR__ . '/../../templates/views/admin/login.php';
-    }
-    
-    /**
-     * Handle admin logout
-     */
-    public function handleAdminLogout() {
-        session_destroy();
-        header('Location: /admin/login');
+    public function adminRedirect() {
+        header('Location: /admin/tickets');
         exit;
+    }
+
+    /**
+     * Update ticket (for POST route)
+     */
+    public function updateTicket() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ticket_id'], $_POST['status'])) {
+            $this->ticketModel->updateStatus($_POST['ticket_id'], $_POST['status']);
+            header('Location: /admin/tickets?updated=1');
+            exit;
+        }
     }
     
     /**
@@ -319,25 +282,5 @@ class ITSupportController extends BaseController {
         ];
         
         return $responses[$priority] ?? '24 hours';
-    }
-
-
-/**
-     * Handle admin redirect
-     */
-    public function adminRedirect() {
-        header('Location: /admin/login');
-        exit;
-    }
-
-    /**
-     * Update ticket (for POST route)
-     */
-    public function updateTicket() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ticket_id'], $_POST['status'])) {
-            $this->ticketModel->updateStatus($_POST['ticket_id'], $_POST['status']);
-            header('Location: /admin/tickets?updated=1');
-            exit;
-        }
     }
 }

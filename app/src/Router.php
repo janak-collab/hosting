@@ -26,9 +26,7 @@ class Router {
             $r->addRoute('GET', '/it-support', 'ITSupportController@showForm');
             $r->addRoute('POST', '/api/it-support/submit', 'ITSupportController@handleSubmission');
             $r->addRoute('GET', '/admin/tickets', 'ITSupportController@showAdminPanel');
-            $r->addRoute('GET', '/admin/login', 'ITSupportController@handleAdminLogin');
-            $r->addRoute('POST', '/admin/login', 'ITSupportController@handleAdminLogin');
-            $r->addRoute('GET', '/admin/logout', 'ITSupportController@handleAdminLogout');
+            $r->addRoute('POST', '/admin/tickets', 'ITSupportController@showAdminPanel');
 
             // Dictation Routes
             $r->addRoute('GET', '/dictation', 'DictationController@showForm');
@@ -60,7 +58,7 @@ class Router {
             $r->addRoute('GET', '/view-tickets', 'ITSupportController@showAdminPanel');
 
             // Admin area general route
-            $r->addRoute('GET', '/admin', 'AdminController@index');
+            $r->addRoute('GET', '/admin', 'ITSupportController@adminRedirect');
 
             // API status check
             $r->addRoute('GET', '/api/public/status', function() {
@@ -76,8 +74,8 @@ class Router {
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
                 http_response_code(404);
-                if (file_exists(APP_PATH . '/resources/views/errors/404.php')) {
-                    require APP_PATH . '/resources/views/errors/404.php';
+                if (file_exists(APP_PATH . '/templates/views/errors/404.php')) {
+                    require APP_PATH . '/templates/views/errors/404.php';
                 } else {
                     echo "404 - Not Found";
                 }
