@@ -1,0 +1,7 @@
+# Additional protection for IP Manager
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} ^/ip-address-manager [NC]
+    RewriteCond %{REMOTE_USER} !^(jvidyarthi|admin)$
+    RewriteRule .* - [F,L]
+</IfModule>

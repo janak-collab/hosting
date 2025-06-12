@@ -3,16 +3,22 @@ namespace App\Controllers;
 
 use App\Services\IpManagerService;
 
-class IpManagerController {
+class IpManagerController extends BaseController {
     private $ipManagerService;
+    private $superAdmins = ['jvidyarthi', 'admin'];
     
     public function __construct() {
+        parent::__construct();
         $this->ipManagerService = new IpManagerService();
     }
     
     public function showForm() {
-        // HTTP Basic Auth is already handled by .htaccess
-        // No need for session check
+        // CRITICAL: Require super admin access
+        $currentUser = $this->getCurrentUser();
+        if (!in_array($currentUser, $this->superAdmins)) {
+            require_once __DIR__ . '/../../templates/views/errors/403-admin.php';
+            exit;
+        }
         
         // Set no-cache headers
         header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
@@ -37,7 +43,12 @@ class IpManagerController {
     }
     
     public function update() {
-        // HTTP Basic Auth is already handled by .htaccess
+        // CRITICAL: Require super admin access
+        $currentUser = $this->getCurrentUser();
+        if (!in_array($currentUser, $this->superAdmins)) {
+            require_once __DIR__ . '/../../templates/views/errors/403-admin.php';
+            exit;
+        }
         
         // Verify CSRF token
         if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -69,7 +80,6 @@ class IpManagerController {
                             break;
                         }
                         
-                        // Ensure location ends with "Office" if it doesn't contain it
                         if (stripos($location, 'office') === false && stripos($location, 'home') === false) {
                             $location .= ' Office';
                         }

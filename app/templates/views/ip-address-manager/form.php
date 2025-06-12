@@ -95,7 +95,7 @@
                 <div class="debug-box">
                     <h3>🔍 Current Configuration</h3>
                     <p><strong>Your current IP:</strong> <?php echo $_SERVER['REMOTE_ADDR']; ?></p>
-                    <p><strong>Logged in as:</strong> <?php echo $_SERVER['PHP_AUTH_USER']; ?></p>
+                    <p><strong>Logged in as:</strong> <?php echo htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? $_SERVER['REMOTE_USER'] ?? 'Unknown'); ?></p>
                     <p><strong>Total IPs configured:</strong> <?php echo count($currentIPs); ?></p>
                 </div>
             </div>

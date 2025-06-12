@@ -1,35 +1,29 @@
-// ============================================
-// GMPM Application JavaScript - Fully Consolidated
-// Generated: $(date +"%Y-%m-%d %H:%M:%S")
-// ============================================
+// GMPM Application JavaScript
+const GMPM = {
+    Utils: {
+        showAlert: function(container, type, message, duration = 5000) {
+            if (!container) return;
 
-// Namespace for GMPM application
-window.GMPM = window.GMPM || {};
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            
+            // Add icon based on type
+            const icons = {
+                'success': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+                'error': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+                'info': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+                'warning': '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+            };
 
-// ============================================
-// Utility Functions
-// ============================================
-GMPM.Utils = {
-    // Show alert message
-    showAlert: function(container, type, message, duration = 5000) {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type}`;
-        
-        const icons = {
-            'error': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>',
-            'success': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>',
-            'info': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>'
-        };
-        
-        alertDiv.innerHTML = `${icons[type] || ''} ${message}`;
-        
-        container.innerHTML = '';
-        container.appendChild(alertDiv);
-        
-        if (duration > 0) {
-            setTimeout(() => {
-                alertDiv.remove();
-            }, duration);
+            alertDiv.innerHTML = `${icons[type] || ''} ${message}`;
+            container.innerHTML = '';
+            container.appendChild(alertDiv);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, duration);
+            }
         }
     }
 };
@@ -37,7 +31,7 @@ GMPM.Utils = {
 // Initialize application
 document.addEventListener('DOMContentLoaded', function() {
     console.log('GMPM Application Initialized');
-    
+
     // Initialize specific modules based on page elements
     initializeModules();
 });
@@ -48,19 +42,19 @@ function initializeModules() {
     if (document.getElementById('phoneNoteForm')) {
         initializePhoneNoteForm();
     }
-    
+
     // IT Support Form Module
     if (document.getElementById('supportForm')) {
         initializeITSupportForm();
     }
-    
-    // IP Manager Module
+
+    // IP Manager Module - FIXED VERSION
     if (document.getElementById('ipForm')) {
         initializeIPManager();
     }
-    
+
     // Print Handler Module
-    if (document.getElementById('printButton') || document.querySelector('.print-container')) {
+    if (document.getElementById('printButton')) {
         initializePrintHandler();
     }
 }
@@ -74,24 +68,19 @@ function initializePhoneNoteForm() {
     const phonePreview = document.getElementById('phonePreview');
     const callerNameInput = document.getElementById('caller_name');
     const hipaaWarning = document.getElementById('hipaaWarning');
-    const lastSeenInput = document.getElementById('last_seen');
+    const descriptionInput = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
     const upcomingInput = document.getElementById('upcoming');
     const appointmentInfo = document.getElementById('appointmentInfo');
-    const textarea = document.getElementById('description');
-    const charCount = document.getElementById('charCount');
+    const providerButtons = document.querySelectorAll('.provider-button');
     const alertContainer = document.getElementById('alertContainer');
 
-    if (!form) return;
-
-    // Phone number formatting
-    if (phoneInput) {
+    // Phone number formatting and preview
+    if (phoneInput && phonePreview) {
         phoneInput.addEventListener('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length > 10) {
-                value = value.substring(0, 10);
-            }
+            const value = this.value.replace(/\D/g, '');
             this.value = value;
-            
+
             if (phonePreview) {
                 if (value.length === 10) {
                     const formatted = `(${value.substring(0,3)}) ${value.substring(3,6)}-${value.substring(6)}`;
@@ -120,27 +109,52 @@ function initializePhoneNoteForm() {
         });
     }
 
-    // Character counter for description
-    if (textarea && charCount) {
-        textarea.addEventListener('input', function() {
-            const count = this.value.length;
-            charCount.textContent = `${count} / 2000`;
-            
-            if (count > 1800) {
+    // Character counter
+    if (descriptionInput && charCount) {
+        descriptionInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length} / 2000`;
+            if (length > 1800) {
                 charCount.style.color = 'var(--error-color)';
-            } else if (count > 1500) {
-                charCount.style.color = 'var(--warning-color)';
             } else {
                 charCount.style.color = 'var(--text-secondary)';
             }
         });
     }
 
+    // Appointment date validation
+    if (upcomingInput && appointmentInfo) {
+        upcomingInput.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                appointmentInfo.textContent = '⚠️ This date is in the past';
+                appointmentInfo.style.color = 'var(--error-color)';
+            } else {
+                appointmentInfo.textContent = '';
+            }
+        });
+    }
+
+    // Provider button handling
+    providerButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const provider = this.getAttribute('data-provider');
+            
+            if (validateForm()) {
+                submitPhoneNote(provider);
+            }
+        });
+    });
+
     // Form validation
     function validateForm() {
-        let isValid = true;
         const requiredFields = form.querySelectorAll('[required]');
-        
+        let isValid = true;
+
         requiredFields.forEach(field => {
             if (!field.value.trim()) {
                 field.classList.add('error');
@@ -149,7 +163,7 @@ function initializePhoneNoteForm() {
                 field.classList.remove('error');
             }
         });
-        
+
         // Phone number validation
         if (phoneInput) {
             const phone = phoneInput.value;
@@ -159,7 +173,7 @@ function initializePhoneNoteForm() {
                 showAlert('error', 'Please enter a valid 10-digit phone number.');
             }
         }
-        
+
         return isValid;
     }
 
@@ -170,19 +184,45 @@ function initializePhoneNoteForm() {
         }
     }
 
-    // Form submission handling
-    form.addEventListener('submit', function(e) {
-        if (!validateForm()) {
-            e.preventDefault();
-            showAlert('error', 'Please fill in all required fields correctly.');
-            
-            const firstError = form.querySelector('.error');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstError.focus();
+    // Submit phone note
+    function submitPhoneNote(provider) {
+        const formData = new FormData(form);
+        formData.append('provider', provider);
+
+        // Show loading state
+        providerButtons.forEach(btn => btn.disabled = true);
+        showAlert('info', 'Submitting phone note...');
+
+        fetch('/api/phone-notes/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message || 'Phone note submitted successfully!');
+                
+                // Show print dialog
+                if (data.id && confirm('Phone note saved! Would you like to print it now?')) {
+                    window.open(`/admin/phone-notes/print/${data.id}`, '_blank');
+                }
+                
+                // Reset form
+                setTimeout(() => {
+                    form.reset();
+                    window.location.href = '/';
+                }, 2000);
+            } else {
+                showAlert('error', data.message || 'Error submitting phone note');
+                providerButtons.forEach(btn => btn.disabled = false);
             }
-        }
-    });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('error', 'Network error. Please try again.');
+            providerButtons.forEach(btn => btn.disabled = false);
+        });
+    }
 }
 
 // ============================================
@@ -190,179 +230,236 @@ function initializePhoneNoteForm() {
 // ============================================
 function initializeITSupportForm() {
     const form = document.getElementById('supportForm');
-    const nameInput = document.getElementById('name');
-    const locationSelect = document.getElementById('location');
-    const categoryInputs = document.querySelectorAll('input[name="category"]');
-    const priorityInputs = document.querySelectorAll('input[name="priority"]');
-    const descriptionTextarea = document.getElementById('description');
+    const descriptionInput = document.getElementById('description');
     const charCount = document.getElementById('charCount');
     const submitBtn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     const btnSpinner = document.getElementById('btnSpinner');
     const alertContainer = document.getElementById('alertContainer');
 
-    if (!form) return;
-
     // Character counter
-    if (descriptionTextarea && charCount) {
-        descriptionTextarea.addEventListener('input', function() {
-            const count = this.value.length;
-            charCount.textContent = `${count} / 2000`;
-            
-            if (count > 1800) {
+    if (descriptionInput && charCount) {
+        descriptionInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length} / 2000`;
+            if (length > 1800) {
                 charCount.style.color = 'var(--error-color)';
-            } else if (count > 1500) {
-                charCount.style.color = 'var(--warning-color)';
             } else {
                 charCount.style.color = 'var(--text-secondary)';
             }
         });
     }
 
-    // Form validation
-    function validateForm() {
-        let isValid = true;
-        const errors = [];
-
-        // Name validation
-        if (nameInput && !nameInput.value.trim()) {
-            nameInput.classList.add('error');
-            const nameError = document.getElementById('nameError');
-            if (nameError) {
-                nameError.textContent = 'Name is required';
-                nameError.style.display = 'block';
+    // Form submission
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (!validateForm()) {
+                return;
             }
-            errors.push('Please enter your name');
-            isValid = false;
-        }
 
-        // Location validation
-        if (locationSelect && !locationSelect.value) {
-            locationSelect.classList.add('error');
-            const locationError = document.getElementById('locationError');
-            if (locationError) {
-                locationError.textContent = 'Please select a location';
-                locationError.style.display = 'block';
-            }
-            errors.push('Please select your office location');
-            isValid = false;
-        }
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnSpinner.style.display = 'inline-block';
 
-        // Category validation
-        const categorySelected = Array.from(categoryInputs).some(input => input.checked);
-        if (!categorySelected) {
-            const categoryError = document.getElementById('categoryError');
-            if (categoryError) {
-                categoryError.textContent = 'Please select an issue category';
-                categoryError.style.display = 'block';
-            }
-            errors.push('Please select an issue category');
-            isValid = false;
-        }
+            const formData = new FormData(form);
 
-        // Description validation
-        if (descriptionTextarea && !descriptionTextarea.value.trim()) {
-            descriptionTextarea.classList.add('error');
-            const descriptionError = document.getElementById('descriptionError');
-            if (descriptionError) {
-                descriptionError.textContent = 'Description is required';
-                descriptionError.style.display = 'block';
-            }
-            errors.push('Please describe your issue');
-            isValid = false;
-        }
-
-        return { isValid, errors };
+            fetch('/api/it-support/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message || 'Ticket submitted successfully!');
+                    
+                    if (data.new_csrf_token) {
+                        document.getElementById('csrfToken').value = data.new_csrf_token;
+                    }
+                    
+                    // Reset form
+                    setTimeout(() => {
+                        form.reset();
+                        if (charCount) charCount.textContent = '0 / 2000';
+                    }, 1000);
+                } else {
+                    showAlert('error', data.error || 'Error submitting ticket');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('error', 'Network error. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnSpinner.style.display = 'none';
+            });
+        });
     }
 
-    // Show alert message
+    // Form validation
+    function validateForm() {
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                isValid = false;
+            } else {
+                field.classList.remove('error');
+            }
+        });
+
+        if (!isValid) {
+            showAlert('error', 'Please fill in all required fields.');
+        }
+
+        return isValid;
+    }
+
+    // Show alert
     function showAlert(type, message) {
         if (alertContainer) {
             GMPM.Utils.showAlert(alertContainer, type, message);
         }
     }
-
-    // Form submission
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const validation = validateForm();
-        if (!validation.isValid) {
-            showAlert('error', 'Please correct the following errors: ' + validation.errors.join(', '));
-            
-            const firstError = form.querySelector('.error');
-            if (firstError) {
-                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstError.focus();
-            }
-            return;
-        }
-
-        // Show loading state
-        if (submitBtn) submitBtn.disabled = true;
-        if (btnText) btnText.style.display = 'none';
-        if (btnSpinner) btnSpinner.style.display = 'inline-block';
-
-        // Form submission will be handled by the form action
-        form.submit();
-    });
 }
 
 // ============================================
-// IP Manager Module
+// IP Manager Module - FIXED WITH EVENT DELEGATION
 // ============================================
 function initializeIPManager() {
-    window.ipCount = document.querySelectorAll('.ip-row').length || 0;
+    const ipForm = document.getElementById('ipForm');
+    const ipList = document.getElementById('ipList');
+    const addBtn = document.getElementById('addIPBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
     
-    // IP validation function
-    window.validateIPAddress = function(ip) {
-        const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-        return ipRegex.test(ip);
-    };
-    
+    // Initialize counter
+    let ipCount = document.querySelectorAll('.ip-row').length;
+
+    // Add IP button
+    if (addBtn) {
+        addBtn.addEventListener('click', function() {
+            addIP();
+        });
+    }
+
+    // Event delegation for remove buttons
+    if (ipList) {
+        ipList.addEventListener('click', function(e) {
+            // Check if clicked element is a remove button
+            if (e.target.classList.contains('remove-btn')) {
+                e.preventDefault();
+                removeIP(e.target);
+            }
+        });
+
+        // Event delegation for IP validation
+        ipList.addEventListener('blur', function(e) {
+            if (e.target.classList.contains('ip-input')) {
+                validateIP(e.target);
+            }
+        }, true);
+    }
+
+    // Form submission
+    if (ipForm) {
+        ipForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate all IPs
+            const ipInputs = document.querySelectorAll('.ip-input');
+            let isValid = true;
+            
+            ipInputs.forEach(input => {
+                if (!validateIP(input)) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                GMPM.Utils.showAlert(
+                    document.getElementById('alertContainer'), 
+                    'error', 
+                    'Please fix invalid IP addresses before saving.'
+                );
+                return;
+            }
+
+            // Show loading state
+            if (submitBtn && btnText && btnSpinner) {
+                submitBtn.disabled = true;
+                btnText.style.display = 'none';
+                btnSpinner.style.display = 'inline-block';
+            }
+
+            // Submit form
+            ipForm.submit();
+        });
+    }
+
     // Add IP function
-    window.addIP = function() {
-        window.ipCount++;
-        const ipList = document.getElementById('ipList');
-        if (!ipList) return;
-        
+    function addIP() {
+        ipCount++;
         const newRow = document.createElement('div');
         newRow.className = 'ip-row';
         newRow.innerHTML = `
-            <span class="row-number">#${window.ipCount}</span>
-            <input type="text" name="ips[]" class="form-input ip-input" 
-                placeholder="IP Address (e.g., 192.168.1.1)" required maxlength="15">
-            <input type="text" name="locations[]" class="form-input" 
+            <span class="row-number">#${ipCount}</span>
+            <input type="text" name="ips[]" class="form-input ip-input"
+                placeholder="IP Address (e.g., 192.168.1.1)" required maxlength="15"
+                pattern="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$">
+            <input type="text" name="locations[]" class="form-input"
                 placeholder="Location/Office Name" required maxlength="100">
-            <button type="button" class="remove-btn" onclick="removeIP(this)">Remove</button>
+            <button type="button" class="remove-btn">Remove</button>
         `;
         ipList.appendChild(newRow);
-        
+
+        // Focus on new IP input
         const newIpInput = newRow.querySelector('input[name="ips[]"]');
         if (newIpInput) {
             newIpInput.focus();
-            newIpInput.addEventListener('blur', function() {
-                validateIP(this);
-            });
         }
-    };
-    
+        
+        updateRowNumbers();
+    }
+
     // Remove IP function
-    window.removeIP = function(button) {
+    function removeIP(button) {
         const ipRows = document.querySelectorAll('.ip-row');
         if (ipRows.length <= 1) {
             alert('You must keep at least one IP address');
             return;
         }
+
+        const row = button.closest('.ip-row');
+        const ipInput = row.querySelector('input[name="ips[]"]');
+        const locationInput = row.querySelector('input[name="locations[]"]');
         
-        if (confirm('Remove this IP address?')) {
-            button.closest('.ip-row').remove();
+        const confirmMsg = (ipInput && ipInput.value) ? 
+            `Remove IP ${ipInput.value} (${locationInput ? locationInput.value : ''})?` : 
+            'Remove this row?';
+
+        if (confirm(confirmMsg)) {
+            row.remove();
             updateRowNumbers();
+            GMPM.Utils.showAlert(
+                document.getElementById('alertContainer'), 
+                'info', 
+                'IP address removed',
+                3000
+            );
         }
-    };
-    
+    }
+
     // Update row numbers
-    window.updateRowNumbers = function() {
+    function updateRowNumbers() {
         const rows = document.querySelectorAll('.ip-row');
         rows.forEach((row, index) => {
             const number = row.querySelector('.row-number');
@@ -370,31 +467,36 @@ function initializeIPManager() {
                 number.textContent = `#${index + 1}`;
             }
         });
-        window.ipCount = rows.length;
-    };
-    
+        ipCount = rows.length;
+    }
+
     // Validate IP function
-    window.validateIP = function(input) {
+    function validateIP(input) {
         const value = input.value.trim();
         const errorDiv = document.getElementById('ipError');
         
-        if (value && !validateIPAddress(value)) {
+        if (!value) {
+            input.classList.remove('error');
+            return true;
+        }
+
+        const ipPattern = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        
+        if (!ipPattern.test(value)) {
             input.classList.add('error');
             if (errorDiv) {
                 errorDiv.textContent = `Invalid IP address: ${value}`;
                 errorDiv.style.display = 'block';
             }
+            return false;
         } else {
             input.classList.remove('error');
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.style.display = 'none';
+            }
+            return true;
         }
-    };
-    
-    // Add button event listener
-    const addBtn = document.getElementById('addIPBtn');
-    if (addBtn) {
-        addBtn.addEventListener('click', function() {
-            addIP();
-        });
     }
 }
 
@@ -404,21 +506,58 @@ function initializeIPManager() {
 function initializePrintHandler() {
     const printButton = document.getElementById('printButton');
     const closeButton = document.getElementById('closeButton');
-    
+
     if (printButton) {
         printButton.addEventListener('click', function() {
             window.print();
         });
     }
-    
+
     if (closeButton) {
         closeButton.addEventListener('click', function() {
             window.close();
         });
     }
-    
-    // Auto-print after page loads
-    setTimeout(function() {
-        window.print();
-    }, 500);
 }
+
+// ============================================
+// Header Module (if needed)
+// ============================================
+function initializeHeader() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileSearch = document.getElementById('mobileSearch');
+
+    if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('active');
+            this.classList.toggle('active');
+            
+            const menuIcon = this.querySelector('.menu-icon');
+            const closeIcon = this.querySelector('.close-icon');
+            
+            if (mobileMenu.classList.contains('active')) {
+                menuIcon.style.display = 'none';
+                closeIcon.style.display = 'block';
+            } else {
+                menuIcon.style.display = 'block';
+                closeIcon.style.display = 'none';
+            }
+        });
+    }
+
+    if (mobileSearchToggle && mobileSearch) {
+        mobileSearchToggle.addEventListener('click', function() {
+            mobileSearch.style.display = mobileSearch.style.display === 'none' ? 'block' : 'none';
+            if (mobileSearch.style.display === 'block') {
+                mobileSearch.querySelector('input').focus();
+            }
+        });
+    }
+}
+
+// Initialize header on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeHeader();
+});
