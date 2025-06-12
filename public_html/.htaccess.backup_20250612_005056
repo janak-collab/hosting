@@ -131,7 +131,6 @@ DirectoryIndex index.php
 AuthType Basic
 # Allow server access without auth
 SetEnvIf Remote_Addr "^65.181.111.128$" noauth
-SetEnvIf Remote_Addr "^68.134.31.125$" noauth
 
 AuthName "Greater Maryland Pain Management - Authorized Access Only"
 AuthUserFile "/home/gmpmus/.htpasswds/passwd"
